@@ -122,17 +122,20 @@ exports.getPositions = () => {
 
 exports.getPosition = (positionId) => {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT 
-    positions.id,
-    positions.title,
-    positions.description,
-    positions.fieldId,
-    positions.status,
-    positions.skillsId
-	  FROM positions
-    WHERE positions.id = ?
+    const sql = `select fields.field, positions.title,positions.status,positions.description, group_concat(DISTINCT skills.skill) as combinedSkills , newSkills.id from 
+    (WITH split(id, csv) AS (
+      SELECT 
+        '', 
+        positions.skillsId||','  FROM positions  WHERE positions.id =?
+      UNION ALL SELECT
+        substr(csv, 0, instr(csv, ',')),
+        substr(csv, instr(csv, ',') + 1)
+      FROM split 
+      WHERE csv != ''
+    ) SELECT id FROM split 
+    WHERE id!='') AS newSkills JOIN skills on newSkills.id = skills.id JOIN positions JOIN fields on positions.fieldId = fields.id WHERE positions.id = ?
         `;
-    db.all(sql, [positionId], (err, rows) => {
+    db.all(sql, [positionId,positionId], (err, rows) => {
       if (err) {
         reject(err);
         return;
@@ -144,9 +147,9 @@ exports.getPosition = (positionId) => {
             row.id,
             row.title,
             row.description,
-            row.fieldId,
+            row.field,
             row.status,
-            row.skillsId
+            row.combinedSkills
           )
       );
       resolve(candidate);
@@ -288,13 +291,13 @@ class CandidateData {
 }
 
 class PositionData {
-  constructor(id, title, description, fieldId, status, skillsId) {
+  constructor(id, title, description, field, status, skills) {
     this.id = id;
     this.title = title;
     this.description = description;
-    this.fieldId = fieldId;
+    this.field = field;
     this.status = status;
-    this.skillsId = skillsId;
+    this.skills = skills;
   }
 }
 
