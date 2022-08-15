@@ -92,13 +92,13 @@ exports.getCandidate = (candidateId) => {
 exports.getPositions = () => {
   return new Promise((resolve, reject) => {
     const sql = `SELECT 
-        positions.id,
-        positions.title,
-        positions.description,
-        positions.fieldId,
-        positions.status,
-        positions.skillsId
-        FROM positions`;
+    positions.id,
+    positions.title,
+    positions.description,
+    positions.status,
+    positions.skills,
+    fields.field
+    FROM positions JOIN fields on positions.id = fields.id`;
     db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
@@ -110,9 +110,9 @@ exports.getPositions = () => {
             row.id,
             row.title,
             row.description,
-            row.fieldId,
+            row.field,
             row.status,
-            row.skillsId
+            row.skills
           )
       );
       resolve(positions);
@@ -122,20 +122,17 @@ exports.getPositions = () => {
 
 exports.getPosition = (positionId) => {
   return new Promise((resolve, reject) => {
-    const sql = `select fields.field, positions.title,positions.status,positions.description, group_concat(DISTINCT skills.skill) as combinedSkills , newSkills.id from 
-    (WITH split(id, csv) AS (
-      SELECT 
-        '', 
-        positions.skillsId||','  FROM positions  WHERE positions.id =?
-      UNION ALL SELECT
-        substr(csv, 0, instr(csv, ',')),
-        substr(csv, instr(csv, ',') + 1)
-      FROM split 
-      WHERE csv != ''
-    ) SELECT id FROM split 
-    WHERE id!='') AS newSkills JOIN skills on newSkills.id = skills.id JOIN positions JOIN fields on positions.fieldId = fields.id WHERE positions.id = ?
+    const sql = `SELECT 
+    positions.id,
+    positions.title,
+    positions.description,
+    positions.status,
+    positions.skills,
+    fields.field
+    FROM positions JOIN fields on positions.id = fields.id
+    WHERE positions.id = ?
         `;
-    db.all(sql, [positionId,positionId], (err, rows) => {
+    db.all(sql, [positionId], (err, rows) => {
       if (err) {
         reject(err);
         return;
@@ -149,7 +146,7 @@ exports.getPosition = (positionId) => {
             row.description,
             row.field,
             row.status,
-            row.combinedSkills
+            row.skills
           )
       );
       resolve(candidate);

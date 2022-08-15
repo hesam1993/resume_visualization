@@ -1,0 +1,12 @@
+select fields.field, positions.title,positions.status,positions.description, group_concat(DISTINCT skills.skill) as mySkills , newSkills.id from 
+(WITH split(id, csv) AS (
+  SELECT 
+    '', 
+    positions.skillsId||','  FROM positions  WHERE positions.id =3
+  UNION ALL SELECT
+    substr(csv, 0, instr(csv, ',')),
+    substr(csv, instr(csv, ',') + 1)
+  FROM split 
+  WHERE csv != ''
+) SELECT id FROM split 
+WHERE id!='') AS newSkills JOIN skills on newSkills.id = skills.id JOIN positions JOIN fields on positions.fieldId = fields.id
