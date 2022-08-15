@@ -32,7 +32,7 @@ exports.getCandidates = () => {
         candidates.fullName,
         candidates.age,
         candidates.sex,
-        candidates.fieldsId,
+        candidates.fieldId,
         candidates.skillsId
         FROM candidates`;
     db.all(sql, (err, rows) => {
@@ -47,7 +47,7 @@ exports.getCandidates = () => {
             row.fullName,
             row.age,
             row.sex,
-            row.fieldsId,
+            row.fieldId,
             row.skillsId
           )
       );
@@ -62,7 +62,7 @@ exports.getCandidate = (candidateId) => {
     candidates.fullName,
     candidates.age,
     candidates.sex,
-    candidates.fieldsId,
+    candidates.fieldId,
     candidates.skillsId
 	  FROM candidates
     WHERE candidates.id = ?
@@ -80,7 +80,7 @@ exports.getCandidate = (candidateId) => {
             row.fullName,
             row.age,
             row.sex,
-            row.fieldsId,
+            row.fieldId,
             row.skillsId
           )
       );
@@ -95,7 +95,7 @@ exports.getPositions = () => {
         positions.id,
         positions.title,
         positions.description,
-        positions.fieldsId,
+        positions.fieldId,
         positions.status,
         positions.skillsId
         FROM positions`;
@@ -110,7 +110,7 @@ exports.getPositions = () => {
             row.id,
             row.title,
             row.description,
-            row.fieldsId,
+            row.fieldId,
             row.status,
             row.skillsId
           )
@@ -126,7 +126,7 @@ exports.getPosition = (positionId) => {
     positions.id,
     positions.title,
     positions.description,
-    positions.fieldsId,
+    positions.fieldId,
     positions.status,
     positions.skillsId
 	  FROM positions
@@ -144,7 +144,7 @@ exports.getPosition = (positionId) => {
             row.id,
             row.title,
             row.description,
-            row.fieldsId,
+            row.fieldId,
             row.status,
             row.skillsId
           )
@@ -156,13 +156,8 @@ exports.getPosition = (positionId) => {
 
 exports.getApplications = () => {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT 
-        applications.id,
-        applications.candidateId,
-        applications.positionId,
-        applications.candidateScore,
-        applications.hrScore
-        FROM applications`;
+    const sql = `select applications.id,positions.title as 'positionTitle',COUNT(DISTINCT applications.candidateId)
+    as 'sumCandidates' from applications JOIN positions on applications.positionId = positions.id GROUP BY applications.positionId`;
     db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
@@ -170,30 +165,25 @@ exports.getApplications = () => {
       }
       const applications = rows.map(
         (row) =>
-          new ApplicationData(
+            new ApplicationsData(
             row.id,
-            row.candidateId,
-            row.positionId,
-            row.candidateScore,
-            row.hrScore,
+            row.positionTitle,
+            row.sumCandidates
           )
+          
       );
+      
+      console.log(applications)
       resolve(applications);
     });
   });
 };
 
-exports.getApplication = (applicationId) => {
+exports.getApplication = (positionId) => {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT 
-        applications.id,
-        applications.candidateId,
-        applications.positionId,
-        applications.candidateScore,
-        applications.hrScore
-        FROM applications
-        WHERE applications.id = ? `;
-    db.all(sql, [applicationId] ,(err, rows) => {
+    const sql = `select applications.id,applications.candidateScore,applications.hrScore,applications.positionId,positions.title as 'positionTitle',candidates.fullName as 'candidateName',candidates.id as 'candidateId' from applications
+    JOIN positions on applications.positionId = positions.id JOIN candidates on applications.candidateId = candidates.id WHERE applications.positionId=?`;
+    db.all(sql, [positionId], (err, rows) => {
       if (err) {
         reject(err);
         return;
@@ -203,16 +193,17 @@ exports.getApplication = (applicationId) => {
           new ApplicationData(
             row.id,
             row.candidateId,
+            row.candidateName,
             row.positionId,
+            row.positionTitle,
             row.candidateScore,
-            row.hrScore,
+            row.hrScore
           )
       );
       resolve(applications);
     });
   });
 };
-
 
 exports.getFields = () => {
   return new Promise((resolve, reject) => {
@@ -225,13 +216,7 @@ exports.getFields = () => {
         reject(err);
         return;
       }
-      const fields = rows.map(
-        (row) =>
-          new FieldData(
-            row.id,
-            row.field,
-          )
-      );
+      const fields = rows.map((row) => new FieldData(row.id, row.field));
       resolve(fields);
     });
   });
@@ -248,13 +233,7 @@ exports.getField = (fieldId) => {
         reject(err);
         return;
       }
-      const field = rows.map(
-        (row) =>
-          new FieldData(
-            row.id,
-            row.field,
-          )
-      );
+      const field = rows.map((row) => new FieldData(row.id, row.field));
       resolve(field);
     });
   });
@@ -271,13 +250,7 @@ exports.getSkills = () => {
         reject(err);
         return;
       }
-      const skills = rows.map(
-        (row) =>
-          new SkillsData(
-            row.id,
-            row.skill,
-          )
-      );
+      const skills = rows.map((row) => new SkillsData(row.id, row.skill));
       resolve(skills);
     });
   });
@@ -290,18 +263,12 @@ exports.getSkill = (skillId) => {
         skills.skill
         FROM skills
         WHERE skills.id = ?`;
-    db.all(sql, [skillId] , (err, rows) => {
+    db.all(sql, [skillId], (err, rows) => {
       if (err) {
         reject(err);
         return;
       }
-      const skill = rows.map(
-        (row) =>
-          new SkillsData(
-            row.id,
-            row.skill,
-          )
-      );
+      const skill = rows.map((row) => new SkillsData(row.id, row.skill));
       resolve(skill);
     });
   });
@@ -309,36 +276,44 @@ exports.getSkill = (skillId) => {
 
 // ===========================================================================================
 
-
 class CandidateData {
-  constructor(id, fullName, age, sex, fieldsId, skillsId) {
+  constructor(id, fullName, age, sex, fieldId, skillsId) {
     this.id = id;
     this.fullName = fullName;
     this.age = age;
     this.sex = sex;
-    this.fieldsId = fieldsId;
+    this.fieldId = fieldId;
     this.skillsId = skillsId;
   }
 }
 
 class PositionData {
-  constructor(id, title, description, fieldsId, status, skillsId) {
+  constructor(id, title, description, fieldId, status, skillsId) {
     this.id = id;
     this.title = title;
     this.description = description;
-    this.fieldsId = fieldsId;
+    this.fieldId = fieldId;
     this.status = status;
     this.skillsId = skillsId;
   }
 }
 
 class ApplicationData {
-  constructor(id, candidateId, positionId, candidateScore, hrScore) {
+  constructor(id, candidateId,candidateName, positionId,positionTitle, candidateScore, hrScore) {
     this.id = id;
     this.candidateId = candidateId;
+    this.candidateName = candidateName;
+    this.positionTitle = positionTitle;
     this.positionId = positionId;
     this.candidateScore = candidateScore;
     this.hrScore = hrScore;
+  }
+}
+class ApplicationsData {
+  constructor(id, positionTitle, sumCandidates) {
+    this.id = id;
+    this.positionTitle = positionTitle;
+    this.sumCandidates = sumCandidates;
   }
 }
 

@@ -79,10 +79,10 @@ app.get("/applications", async (req, res) => {
   });
 
 
-  app.get("/applications/:applicationId", async (req, res) => {
-    const applicationId = req.params.applicationId
+  app.get("/applications/:positionId", async (req, res) => {
+    const positionId = req.params.positionId
     try {
-      const application = await dao.getApplication(applicationId);
+      const application = await dao.getApplication(positionId);
       res.status(200).json({ application });
     } catch (err) {
       console.log(err);
