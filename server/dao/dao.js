@@ -28,13 +28,13 @@ exports.getUsers = () => {
 exports.getCandidates = () => {
   return new Promise((resolve, reject) => {
     const sql = `SELECT 
-        candidates.id,
-        candidates.fullName,
-        candidates.age,
-        candidates.sex,
-        candidates.fieldId,
-        candidates.skillsId
-        FROM candidates`;
+    candidates.id,
+    candidates.fullName,
+    candidates.age,
+    candidates.sex,
+    fields.field,
+    candidates.skills
+    FROM candidates JOIN fields on candidates.fieldId = fields.id`;
     db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
@@ -47,7 +47,7 @@ exports.getCandidates = () => {
             row.fullName,
             row.age,
             row.sex,
-            row.fieldId,
+            row.field,
             row.skillsId
           )
       );
@@ -58,13 +58,14 @@ exports.getCandidates = () => {
 
 exports.getCandidate = (candidateId) => {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT candidates.id,
+    const sql = `SELECT 
+    candidates.id,
     candidates.fullName,
     candidates.age,
     candidates.sex,
-    candidates.fieldId,
-    candidates.skillsId
-	  FROM candidates
+    fields.field,
+    candidates.skills
+    FROM candidates JOIN fields on candidates.fieldId = fields.id
     WHERE candidates.id = ?
         `;
     db.all(sql, [candidateId], (err, rows) => {
@@ -80,7 +81,7 @@ exports.getCandidate = (candidateId) => {
             row.fullName,
             row.age,
             row.sex,
-            row.fieldId,
+            row.field,
             row.skillsId
           )
       );
@@ -277,12 +278,12 @@ exports.getSkill = (skillId) => {
 // ===========================================================================================
 
 class CandidateData {
-  constructor(id, fullName, age, sex, fieldId, skillsId) {
+  constructor(id, fullName, age, sex, field, skillsId) {
     this.id = id;
     this.fullName = fullName;
     this.age = age;
     this.sex = sex;
-    this.fieldId = fieldId;
+    this.field = field;
     this.skillsId = skillsId;
   }
 }
