@@ -15,7 +15,7 @@ app.use(express.json({ limit: "50mb" })); // Process body content
 app.use(cookieParser());
 app.use(express.static(path.resolve(__dirname, "public")));
 
-app.get("/users", async (req, res) => {
+app.get("/api/users", async (req, res) => {
   try {
     const users = await dao.getUsers();
     res.status(200).json(users);
@@ -25,7 +25,7 @@ app.get("/users", async (req, res) => {
   }
 });
 
-app.get("/candidates", async (req, res) => {
+app.get("/api/candidates", async (req, res) => {
   try {
     const candidates = await dao.getCandidates();
     res.status(200).json({ candidates });
@@ -35,7 +35,7 @@ app.get("/candidates", async (req, res) => {
   }
 });
 
-app.get("/candidates/:candidateId", async (req, res) => {
+app.get("/api/candidates/:candidateId", async (req, res) => {
   console.log("called in server.js");
   const candidateId = req.params.candidateId;
   try {
@@ -47,7 +47,7 @@ app.get("/candidates/:candidateId", async (req, res) => {
   }
 });
 
-app.get("/positions", async (req, res) => {
+app.get("/api/positions", async (req, res) => {
   try {
     const positions = await dao.getPositions();
     res.status(200).json({ positions });
@@ -57,7 +57,7 @@ app.get("/positions", async (req, res) => {
   }
 });
 
-app.get("/positions/:positionId", async (req, res) => {
+app.get("/api/positions/:positionId", async (req, res) => {
   const positionId = req.params.positionId;
   try {
     const position = await dao.getPosition(positionId);
@@ -68,7 +68,7 @@ app.get("/positions/:positionId", async (req, res) => {
   }
 });
 
-app.get("/applications", async (req, res) => {
+app.get("/api/applications", async (req, res) => {
     try {
       const applications = await dao.getApplications();
       res.status(200).json({ applications });
@@ -79,7 +79,7 @@ app.get("/applications", async (req, res) => {
   });
 
 
-  app.get("/applications/:positionId", async (req, res) => {
+  app.get("/api/applications/:positionId", async (req, res) => {
     const positionId = req.params.positionId
     try {
       const application = await dao.getApplication(positionId);
@@ -91,7 +91,7 @@ app.get("/applications", async (req, res) => {
   });
 
 
-  app.get("/fields", async (req, res) => {
+  app.get("/api/fields", async (req, res) => {
     try {
       const fields = await dao.getFields();
       res.status(200).json({ fields });
@@ -102,7 +102,7 @@ app.get("/applications", async (req, res) => {
   });
 
 
-  app.get("/fields/:fieldId", async (req, res) => {
+  app.get("/api/fields/:fieldId", async (req, res) => {
     const fieldId = req.params.fieldId
     try {
       const field = await dao.getField(fieldId);
@@ -114,7 +114,7 @@ app.get("/applications", async (req, res) => {
   });
 
 
-  app.get("/skills", async (req, res) => {
+  app.get("/api/skills", async (req, res) => {
     try {
       const skills = await dao.getSkills();
       res.status(200).json({ skills });
@@ -125,7 +125,7 @@ app.get("/applications", async (req, res) => {
   });
 
 
-  app.get("/skills/:skillId", async (req, res) => {
+  app.get("/api/skills/:skillId", async (req, res) => {
     const skillId = req.params.skillId
     try {
       const skill = await dao.getField(skillId);
@@ -136,6 +136,25 @@ app.get("/applications", async (req, res) => {
     }
   });
 
+  app.get("/api/educations", async (req, res) => {
+    try {
+      const educations = await dao.getEducations();
+      res.status(200).json({ educations });
+    } catch (err) {
+      console.log(err);
+      res.status(400).end();
+    }
+  });
+  
+  app.get("/api/works", async (req, res) => {
+    try {
+      const works = await dao.getWorks();
+      res.status(200).json({ works });
+    } catch (err) {
+      console.log(err);
+      res.status(400).end();
+    }
+  });
 
 app.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);

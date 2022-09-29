@@ -48,7 +48,7 @@ exports.getCandidates = () => {
             row.age,
             row.sex,
             row.field,
-            row.skillsId
+            row.skills
           )
       );
       resolve(candidates);
@@ -58,16 +58,12 @@ exports.getCandidates = () => {
 
 exports.getCandidate = (candidateId) => {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT 
-    candidates.id,
-    candidates.fullName,
-    candidates.age,
-    candidates.sex,
-    fields.field,
-    candidates.skills
+    const sql = `SELECT candidates.id,candidates.fullName,candidates.age,candidates.sex,
+    candidates.skills,candidates.experienceYears,candidates.linkedIn,candidates.mediumLink,
+    candidates.githubId,candidates.tel,candidates.email,candidates.location,candidates.title,
+    candidates.aboutMe,candidates.languages,fields.field
     FROM candidates JOIN fields on candidates.fieldId = fields.id
-    WHERE candidates.id = ?
-        `;
+        WHERE candidates.id = ?`;
     db.all(sql, [candidateId], (err, rows) => {
       if (err) {
         reject(err);
@@ -82,7 +78,17 @@ exports.getCandidate = (candidateId) => {
             row.age,
             row.sex,
             row.field,
-            row.skillsId
+            row.skills,
+            row.experienceYears,
+            row.linkedIn,
+            row.mediumLink,
+            row.githubId,
+            row.tel,
+            row.email,
+            row.location,
+            row.title,
+            row.aboutMe,
+            row.languages
           )
       );
       resolve(candidate);
@@ -92,14 +98,12 @@ exports.getCandidate = (candidateId) => {
 
 exports.getPositions = () => {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT 
-    positions.id,
-    positions.title,
+    const sql = `select positions.id,positions.title,
     positions.description,
-    positions.status,
-    positions.skills,
-    fields.field
-    FROM positions JOIN fields on positions.id = fields.id`;
+    fields.field,
+    positions.skills,COUNT(DISTINCT applications.candidateId)
+    as 'sumCandidates',positions.status from applications
+    JOIN positions on applications.positionId = positions.id JOIN fields on positions.id = fields.id GROUP BY applications.positionId`;
     db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
@@ -107,13 +111,14 @@ exports.getPositions = () => {
       }
       const positions = rows.map(
         (row) =>
-          new PositionData(
+          new PositionsData(
             row.id,
             row.title,
             row.description,
             row.field,
-            row.status,
-            row.skills
+            row.skills,
+            row.sumCandidates,
+            row.status
           )
       );
       resolve(positions);
@@ -146,8 +151,8 @@ exports.getPosition = (positionId) => {
             row.title,
             row.description,
             row.field,
-            row.status,
-            row.skills
+            row.skills,
+            row.status
           )
       );
       resolve(candidate);
@@ -166,15 +171,10 @@ exports.getApplications = () => {
       }
       const applications = rows.map(
         (row) =>
-            new ApplicationsData(
-            row.id,
-            row.positionTitle,
-            row.sumCandidates
-          )
-          
+          new ApplicationsData(row.id, row.positionTitle, row.sumCandidates)
       );
-      
-      console.log(applications)
+
+      console.log(applications);
       resolve(applications);
     });
   });
@@ -182,8 +182,12 @@ exports.getApplications = () => {
 
 exports.getApplication = (positionId) => {
   return new Promise((resolve, reject) => {
-    const sql = `select applications.id,applications.candidateScore,applications.hrScore,applications.positionId,positions.title as 'positionTitle',candidates.fullName as 'candidateName',candidates.id as 'candidateId' from applications
-    JOIN positions on applications.positionId = positions.id JOIN candidates on applications.candidateId = candidates.id WHERE applications.positionId=?`;
+    const sql = `select applications.id,applications.candidateScore,applications.hrScore,applications.positionId,
+    positions.title as 'positionTitle',candidates.fullName as 'candidateName',candidates.age,candidates.sex,
+	  candidates.experienceYears,candidates.educationId,candidates.workId,candidates.languages,candidates.location,candidates.title as 'Candidate Role',
+    fields.field,candidates.skills,candidates.id as 'candidateId' from applications
+    JOIN positions on applications.positionId = positions.id JOIN candidates on applications.candidateId = candidates.id JOIN
+    fields on candidates.fieldId = fields.id WHERE applications.positionId=?`;
     db.all(sql, [positionId], (err, rows) => {
       if (err) {
         reject(err);
@@ -198,7 +202,17 @@ exports.getApplication = (positionId) => {
             row.positionId,
             row.positionTitle,
             row.candidateScore,
-            row.hrScore
+            row.hrScore,
+            row.sex,
+            row.age,
+            row.field,
+            row.skills,
+            row.experienceYears,
+            row.educationId,
+            row.workId,
+            row.languages,
+            row.location,
+            row.candidateRole
           )
       );
       resolve(applications);
@@ -275,32 +289,145 @@ exports.getSkill = (skillId) => {
   });
 };
 
+exports.getEducations = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `select * from educations
+        `;
+    db.all(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      const education = rows.map(
+        (row) =>
+          new EducationData(
+            row.id,
+            row.candidateId,
+            row.universityName,
+            row.location,
+            row.major,
+            row.startDate,
+            row.finishDate,
+            row.description
+          )
+      );
+      resolve(education);
+    });
+  });
+};
+
+exports.getWorks = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `select * from works
+        `;
+    db.all(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      const education = rows.map(
+        (row) =>
+          new WorksData(
+            row.id,
+            row.candidateId,
+            row.companyName,
+            row.location,
+            row.jobTitle,
+            row.startDate,
+            row.finishDate,
+            row.description
+          )
+      );
+      resolve(education);
+    });
+  });
+};
+
 // ===========================================================================================
 
 class CandidateData {
-  constructor(id, fullName, age, sex, field, skillsId) {
+  constructor(
+    id,
+    fullName,
+    age,
+    sex,
+    field,
+    skills,
+    experienceYears,
+    linkedIn,
+    mediumLink,
+    githubId,
+    tel,
+    email,
+    location,
+    title,
+    aboutMe,
+    languages
+  ) {
     this.id = id;
     this.fullName = fullName;
     this.age = age;
     this.sex = sex;
     this.field = field;
-    this.skillsId = skillsId;
+    this.skills = skills;
+    this.experienceYears = experienceYears;
+    this.linkedIn = linkedIn;
+    this.mediumLink = mediumLink;
+    this.githubId = githubId;
+    this.tel = tel;
+    this.email = email;
+    this.location = location;
+    this.title = title;
+    this.aboutMe = aboutMe;
+    this.languages = languages;
+
   }
 }
 
-class PositionData {
-  constructor(id, title, description, field, status, skills) {
+class PositionsData {
+  constructor(id, title, description, field, skills, sumCandidates, status) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.field = field;
-    this.status = status;
     this.skills = skills;
+    this.sumCandidates = sumCandidates;
+    this.status = status;
+  }
+}
+class PositionData {
+  constructor(id, title, description, field, skills, status) {
+    this.id = id;
+    this.title = title;
+    this.description = description;
+    this.field = field;
+    this.skills = skills;
+    this.status = status;
   }
 }
 
 class ApplicationData {
-  constructor(id, candidateId,candidateName, positionId,positionTitle, candidateScore, hrScore) {
+  constructor(
+    id,
+    candidateId,
+    candidateName,
+    positionId,
+    positionTitle,
+    candidateScore,
+    hrScore,
+    sex,
+    age,
+    field,
+    skills,
+    experienceYears,
+    education,
+    work,
+    languages,
+    location,
+    candidateRole
+  ) {
     this.id = id;
     this.candidateId = candidateId;
     this.candidateName = candidateName;
@@ -308,6 +435,16 @@ class ApplicationData {
     this.positionId = positionId;
     this.candidateScore = candidateScore;
     this.hrScore = hrScore;
+    this.sex = sex;
+    this.age = age;
+    this.field = field;
+    this.skills = skills;
+    this.experienceYears = experienceYears;
+    this.education = education;
+    this.work = work;
+    this.languages = languages;
+    this.location = location;
+    this.candidateRole = candidateRole;
   }
 }
 class ApplicationsData {
@@ -329,5 +466,49 @@ class SkillsData {
   constructor(id, skill) {
     this.id = id;
     this.skill = skill;
+  }
+}
+
+class EducationData {
+  constructor(
+    id,
+    candidateId,
+    universityName,
+    location,
+    major,
+    startDate,
+    finishDate,
+    description
+  ) {
+    this.id = id;
+    this.candidateId = candidateId;
+    this.universityName = universityName;
+    this.location = location;
+    this.major = major;
+    this.startDate = startDate;
+    this.finishDate = finishDate;
+    this.description = description;
+  }
+}
+
+class WorksData {
+  constructor(
+    id,
+    candidateId,
+    companyName,
+    location,
+    jobTitle,
+    startDate,
+    finishDate,
+    description
+  ) {
+    this.id = id;
+    this.candidateId = candidateId;
+    this.companyName = companyName;
+    this.location = location;
+    this.jobTitle = jobTitle;
+    this.startDate = startDate;
+    this.finishDate = finishDate;
+    this.description = description;
   }
 }

@@ -1,7 +1,6 @@
 
 import Table from "react-bootstrap/Table";
-import Badge from "react-bootstrap/Badge";
-function ApplicationsList() {
+function ApplicationsList(props) {
     return ( 
         <>
         <Table striped bordered hover>
@@ -13,21 +12,15 @@ function ApplicationsList() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Mark</td>
-                <td>5</td>
+              {props.applications.map((application)=>{
+                return(
+                  <tr key={application.id}>
+                <td>{application.id}</td>
+                <td>{application.positionTitle}</td>
+                <td>{application.sumCandidates}</td>
               </tr>
-              <tr>
-                <td>2</td>
-                <td>Jacob</td>
-                <td>5</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Larry the Bird</td>
-                <td>5</td>
-              </tr>
+                )
+              })}
             </tbody>
           </Table>
         </>

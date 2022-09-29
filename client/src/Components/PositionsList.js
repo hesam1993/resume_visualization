@@ -1,66 +1,57 @@
 import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
-function PositionsList() {
-    return ( 
-        <>
-        <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th>Field</th>
-                <th>Status</th>
-                <th>Required Skills</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>Otto</td>
+import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+function PositionsList(props) {
+  return (
+    <>
+      <h3>List of all positions</h3>
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Field</th>
+            <th>Required Skills</th>
+            <th>Number of Applicants</th>
+            <th>Status</th>
+            <th>Details</th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.positions.map((p) => {
+            let refLink = `/candidates?posId=${p.id}`;
+            return (
+              <tr key={p.id}>
+                <td>{p.id}</td>
+                <td>{p.title}</td>
+                <td>{p.description}</td>
+                <td>{p.field}</td>
                 <td>
-                  <Badge className="mx-1" pill bg="primary">
-                    React js
-                  </Badge>
-                  <Badge className="mx-1" pill bg="primary">
-                    Bootstrap
-                  </Badge>
-                  <Badge className="mx-1" pill bg="primary">
-                    Sass
-                  </Badge>
+                  {p.skills.map((s, index) => {
+                    return (
+                      <Badge key={index} className="mx-1" pill bg="primary">
+                        {s}
+                      </Badge>
+                    );
+                  })}
+                </td>
+                <td>{p.sumCandidates}</td>
+
+                <td>{p.status === 1 ? "Active" : "Not Active"}</td>
+                <td>
+                  <Link to={refLink}>
+                    <Button variant="primary">Details</Button>{" "}
+                  </Link>
                 </td>
               </tr>
-              <tr>
-                <td>2</td>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>Otto</td>
-                <td>
-                  <Badge pill bg="primary">
-                    Python
-                  </Badge>
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Larry the Bird</td>
-                <td>@twitter</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>
-                  <Badge pill bg="primary">
-                    C++
-                  </Badge>
-                </td>
-              </tr>
-            </tbody>
-          </Table>
-        </>
-     );
+            );
+          })}
+        </tbody>
+      </Table>
+    </>
+  );
 }
 
 export default PositionsList;
