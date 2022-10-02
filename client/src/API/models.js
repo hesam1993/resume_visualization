@@ -22,7 +22,7 @@ class CandidateData {
     this.age = age;
     this.sex = sex;
     this.field = field;
-    this.skills = skills;
+    this.skills = skills.split(",");
     this.experienceYears = experienceYears;
     this.linkedIn = linkedIn;
     this.mediumId = mediumId;
@@ -32,7 +32,7 @@ class CandidateData {
     this.location = location;
     this.title = title;
     this.aboutMe = aboutMe;
-    this.languages = languages;
+    this.languages = languages.split(",");
   }
   /**
    * Construct a Counter from a plain object

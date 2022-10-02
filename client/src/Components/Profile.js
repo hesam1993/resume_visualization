@@ -12,7 +12,7 @@ function Profile() {
     API.getCandidate(candidateId)
       .then((candidateInfo) => {
         setCandidate(candidateInfo);
-        console.log(candidate[0]);
+        
       })
       .catch((err) => console.log(err));
   }, []);
@@ -23,14 +23,13 @@ function Profile() {
       API.getGithubInfo(candidate[0].githubId)
         .then((githubInfo) => {
           setGithubInfo(githubInfo);
-          console.log(githubInfo);
+          console.log(candidate[0]);
         })
         .catch((err) => console.log(err));
         
       API.getMediumInfo(candidate[0].mediumId)
         .then((mediumInfo) => {
           setMediumInfo(mediumInfo);
-          console.log(mediumInfo.items.length);
         })
         .catch((err) => console.log(err));
     }
@@ -94,7 +93,8 @@ function Profile() {
                         backgroundImage: 'url("./icons/medium.png")',
                       }}
                     ></div>
-                    <a href={`https://medium.com/@${candidate[0].mediumId}`}>{candidate[0].mediumId} ({mediumInfo.items.length} Articles)</a>
+                    <a href={`https://medium.com/${candidate[0].mediumId}`}
+                    target="blank">{candidate[0].mediumId} ({mediumInfo.items.length} Articles)</a>
                   </Stack>
                 )}
 
@@ -145,12 +145,7 @@ function Profile() {
                 <h4>About</h4>
                 <Stack direction="horizontal" gap={2}>
                   <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. In
-                    non quam luctus, imperdiet nisi commodo, placerat magna.
-                    Proin dictum bibendum purus, vitae pretium eros. Curabitur
-                    dapibus enim id dui lacinia mollis. Nullam vel semper nisl,
-                    nec commodo augue. Donec semper ante ac justo condimentum,
-                    eu vulputate erat convallis. Praesent eget.
+                    {candidate[0].aboutMe}
                   </p>
                 </Stack>
               </Row>
@@ -174,7 +169,7 @@ function Profile() {
               <Row className="profile-bottom-title mt-3">
                 <h4>Skills</h4>
                 <Stack direction="horizontal" gap={2}>
-                  {["CSS", "Reactjs", "Bootstrap"].map((s, index) => {
+                  {candidate[0].skills.map((s, index) => {
                     return (
                       <h5>
                         <Badge key={index} className="mx-1 px-3" bg="secondary">
@@ -188,7 +183,7 @@ function Profile() {
               <Row className="profile-bottom-title mt-3">
                 <h4>Languages</h4>
                 <Stack direction="horizontal" gap={2}>
-                  {["English", "Italian", "Persian"].map((s, index) => {
+                  {candidate[0].languages.map((s, index) => {
                     return (
                       <h5>
                         <Badge key={index} className="mx-1 px-3" bg="secondary">
