@@ -59,7 +59,7 @@ exports.getCandidates = () => {
 exports.getCandidate = (candidateId) => {
   return new Promise((resolve, reject) => {
     const sql = `SELECT candidates.id,candidates.fullName,candidates.age,candidates.sex,
-    candidates.skills,candidates.experienceYears,candidates.linkedIn,candidates.mediumLink,
+    candidates.skills,candidates.experienceYears,candidates.linkedIn,candidates.mediumId,
     candidates.githubId,candidates.tel,candidates.email,candidates.location,candidates.title,
     candidates.aboutMe,candidates.languages,fields.field
     FROM candidates JOIN fields on candidates.fieldId = fields.id
@@ -81,7 +81,7 @@ exports.getCandidate = (candidateId) => {
             row.skills,
             row.experienceYears,
             row.linkedIn,
-            row.mediumLink,
+            row.mediumId,
             row.githubId,
             row.tel,
             row.email,
@@ -357,7 +357,7 @@ class CandidateData {
     skills,
     experienceYears,
     linkedIn,
-    mediumLink,
+    mediumId,
     githubId,
     tel,
     email,
@@ -374,7 +374,7 @@ class CandidateData {
     this.skills = skills;
     this.experienceYears = experienceYears;
     this.linkedIn = linkedIn;
-    this.mediumLink = mediumLink;
+    this.mediumId = mediumId;
     this.githubId = githubId;
     this.tel = tel;
     this.email = email;

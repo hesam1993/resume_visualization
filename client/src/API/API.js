@@ -200,7 +200,7 @@ async function getPositions() {
             c.skills,
             c.experienceYears,
             c.linkedIn,
-            c.mediumLink,
+            c.mediumId,
             c.githubId,
             c.tel,
             c.email,
@@ -218,6 +218,26 @@ async function getPositions() {
   }
 
 
+  async function getMediumInfo(mediumId) {
+    let url = `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/${mediumId}`;
+    const response = await fetch(url);
+    const mediumJson = await response.json();
+    console.log(mediumJson)
+    if (response.ok) {
+      const mediumInfo = mediumJson;
+      const final = new models.MediumData(
+            mediumInfo.status,
+            mediumInfo.feed,
+            mediumInfo.items,
+          )
+
+      return final;
+    } else {
+      let err = { status: response.status, errObj: mediumJson };
+      throw err; // An object with the error coming from the server
+    }
+  }
+
   const API = {
     getPositions,
     getApplications,
@@ -226,6 +246,7 @@ async function getPositions() {
     getWorks,
     getEducations,
     getCandidate,
-    getGithubInfo
+    getGithubInfo,
+    getMediumInfo
   };
   export default API;

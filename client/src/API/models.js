@@ -8,7 +8,7 @@ class CandidateData {
     skills,
     experienceYears,
     linkedIn,
-    mediumLink,
+    mediumId,
     githubId,
     tel,
     email,
@@ -25,7 +25,7 @@ class CandidateData {
     this.skills = skills;
     this.experienceYears = experienceYears;
     this.linkedIn = linkedIn;
-    this.mediumLink = mediumLink;
+    this.mediumId = mediumId;
     this.githubId = githubId;
     this.tel = tel;
     this.email = email;
@@ -262,6 +262,23 @@ class GithubData {
   }
 }
 
+class MediumData {
+  constructor(status, feed, items) {
+    this.status = status;
+    this.feed = feed;
+    this.items = items;
+  }
+  /**
+   * Construct a Counter from a plain object
+   * @param {{}} json
+   * @return  Track the newly created Track object
+   */
+  static from(json) {
+    const l = Object.assign(new WorksData(), json);
+    return l;
+  }
+}
+
 const models = {
   SkillsData,
   CandidateData,
@@ -273,5 +290,6 @@ const models = {
   WorksData,
   EducationData,
   GithubData,
+  MediumData
 };
 export default models;
