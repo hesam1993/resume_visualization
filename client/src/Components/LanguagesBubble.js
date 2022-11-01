@@ -22,7 +22,7 @@ function LanguagesBubbleChart(props) {
 
   const drawBubbleChart = () => {
     var diameter = 600;
-    var color = d3.scaleOrdinal(d3.schemeAccent);
+    var color = d3.scaleOrdinal(d3.schemeDark2);
 
     var bubble = d3.pack(dataset).size([diameter, diameter]).padding(1.5);
 
@@ -92,7 +92,7 @@ function LanguagesBubbleChart(props) {
   };
   return (
     <>
-      <h2>Language Skills Chart</h2>
+      <h2>Candidates Languages Chart</h2>
       <div id="languageBubble"></div>
     </>
   );

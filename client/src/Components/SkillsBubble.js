@@ -30,7 +30,7 @@ function SkillsBubbleChart(props) {
 
   const drawBubbleChart = () => {
     var diameter = 600;
-    var color = d3.scaleOrdinal(d3.schemeAccent);
+    var color = d3.scaleOrdinal(d3.schemeSet1);
 
     var bubble = d3.pack(dataset).size([diameter, diameter]).padding(1.5);
 
