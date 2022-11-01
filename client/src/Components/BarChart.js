@@ -47,6 +47,7 @@ function BarChart({ data }) {
               .text(data.y1)
           );
 
+      d3.sort()
       svg.select(".x-axis").call(xAxis);
       svg.select(".y-axis").call(y1Axis);
 

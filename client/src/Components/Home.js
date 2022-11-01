@@ -16,6 +16,8 @@ function Home() {
 
       })
       .catch((err) => console.log(err));
+
+
   },[]);
   // useEffect(() => {
   //   API.getApplications()

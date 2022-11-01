@@ -99,7 +99,8 @@ async function getPositions() {
             a.work,
             a.languages,
             a.location,
-            a.candidateRole
+            a.candidateRole,
+            a.university
           )
       );
       return final;
@@ -207,7 +208,8 @@ async function getPositions() {
             c.location,
             c.title,
             c.aboutMe,
-            c.languages
+            c.languages,
+            c.university
           )
       );
       return final;
@@ -238,6 +240,32 @@ async function getPositions() {
     }
   }
 
+  async function getTeamMembers(teamId) {
+    let url = `${baseURL}/teams/${teamId}`;
+    const response = await fetch(url);
+    const teamJson = await response.json();
+    if (response.ok) {
+      const teamInfo = teamJson.teamMembers;
+      const final = teamInfo.map(
+        (c) =>
+          new models.TeamMemberData(
+            c.id,
+            c.fullName,
+            c.sex,
+            c.skills,
+            c.experienceYears,
+            c.location,
+            c.languages,
+            c.university
+          )
+      );
+      return final;
+    } else {
+      let err = { status: response.status, errObj: teamJson };
+      throw err; // An object with the error coming from the server
+    }
+  }
+
   const API = {
     getPositions,
     getApplications,
@@ -247,6 +275,7 @@ async function getPositions() {
     getEducations,
     getCandidate,
     getGithubInfo,
-    getMediumInfo
+    getMediumInfo,
+    getTeamMembers
   };
   export default API;

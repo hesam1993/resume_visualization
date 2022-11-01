@@ -61,7 +61,7 @@ exports.getCandidate = (candidateId) => {
     const sql = `SELECT candidates.id,candidates.fullName,candidates.age,candidates.sex,
     candidates.skills,candidates.experienceYears,candidates.linkedIn,candidates.mediumId,
     candidates.githubId,candidates.tel,candidates.email,candidates.location,candidates.title,
-    candidates.aboutMe,candidates.languages,fields.field
+    candidates.aboutMe,candidates.languages,candidates.university,fields.field
     FROM candidates JOIN fields on candidates.fieldId = fields.id
         WHERE candidates.id = ?`;
     db.all(sql, [candidateId], (err, rows) => {
@@ -88,7 +88,8 @@ exports.getCandidate = (candidateId) => {
             row.location,
             row.title,
             row.aboutMe,
-            row.languages
+            row.languages,
+            row.university
           )
       );
       resolve(candidate);
@@ -183,7 +184,7 @@ exports.getApplications = () => {
 exports.getApplication = (positionId) => {
   return new Promise((resolve, reject) => {
     const sql = `select applications.id,applications.candidateScore,applications.hrScore,applications.positionId,
-    positions.title as 'positionTitle',candidates.fullName as 'candidateName',candidates.age,candidates.sex,
+    positions.title as 'positionTitle',candidates.fullName as 'candidateName',candidates.age,candidates.sex,candidates.university,
 	  candidates.experienceYears,candidates.educationId,candidates.workId,candidates.languages,candidates.location,candidates.title as 'Candidate Role',
     fields.field,candidates.skills,candidates.id as 'candidateId' from applications
     JOIN positions on applications.positionId = positions.id JOIN candidates on applications.candidateId = candidates.id JOIN
@@ -212,7 +213,8 @@ exports.getApplication = (positionId) => {
             row.workId,
             row.languages,
             row.location,
-            row.candidateRole
+            row.candidateRole,
+            row.university
           )
       );
       resolve(applications);
@@ -345,6 +347,34 @@ exports.getWorks = () => {
   });
 };
 
+exports.getTeamMembers = (teamId) => {
+  return new Promise((resolve, reject) => {
+    const sql = `select * from team_members where teamId = ?`;
+    db.all(sql, [teamId], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      const teamMembers = rows.map(
+        (row) =>
+          new TeamMemberData(
+            row.id,
+            row.fullName,
+            row.sex,
+            row.skills,
+            row.experienceYears,
+            row.location,
+            row.languages,
+            row.university
+          )
+      );
+      resolve(teamMembers);
+    });
+  });
+};
+
+
 // ===========================================================================================
 
 class CandidateData {
@@ -364,7 +394,8 @@ class CandidateData {
     location,
     title,
     aboutMe,
-    languages
+    languages,
+    univerity
   ) {
     this.id = id;
     this.fullName = fullName;
@@ -382,6 +413,7 @@ class CandidateData {
     this.title = title;
     this.aboutMe = aboutMe;
     this.languages = languages;
+    this.univerity = univerity;
 
   }
 }
@@ -426,7 +458,8 @@ class ApplicationData {
     work,
     languages,
     location,
-    candidateRole
+    candidateRole,
+    university
   ) {
     this.id = id;
     this.candidateId = candidateId;
@@ -445,6 +478,7 @@ class ApplicationData {
     this.languages = languages;
     this.location = location;
     this.candidateRole = candidateRole;
+    this.university = university
   }
 }
 class ApplicationsData {
@@ -510,5 +544,28 @@ class WorksData {
     this.startDate = startDate;
     this.finishDate = finishDate;
     this.description = description;
+  }
+}
+
+class TeamMemberData {
+  constructor(
+    id,
+    fullName,
+    sex,
+    skills,
+    experienceYears,
+    location,
+    languages,
+    university
+  ) {
+    this.id = id;
+    this.fullName = fullName;
+    this.sex = sex;
+    this.skills = skills;
+    this.experienceYears = experienceYears;
+    this.location = location;
+    this.languages = languages;
+    this.university = university;
+
   }
 }

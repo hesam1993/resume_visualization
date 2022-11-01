@@ -111,7 +111,7 @@ function Profile() {
               </Row>
             </Col>
             <Col sm={5}>
-            <BarChart data={data}/>
+            {/* <BarChart data={data}/> */}
             </Col>
           </Row>
           <Row className="mt-4 profile-bottom">

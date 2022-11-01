@@ -15,7 +15,8 @@ class CandidateData {
     location,
     title,
     aboutMe,
-    languages
+    languages,
+    university
   ) {
     this.id = id;
     this.fullName = fullName;
@@ -33,6 +34,7 @@ class CandidateData {
     this.title = title;
     this.aboutMe = aboutMe;
     this.languages = languages.split(",");
+    this.university = university
   }
   /**
    * Construct a Counter from a plain object
@@ -104,7 +106,8 @@ class ApplicationData {
     work,
     languages,
     location,
-    candidateRole
+    candidateRole,
+    university
   ) {
     this.id = id;
     this.candidateId = candidateId;
@@ -123,6 +126,7 @@ class ApplicationData {
     this.languages = languages.split(",");
     this.location = location;
     this.candidateRole = candidateRole;
+    this.university = university;
   }
 
   /**
@@ -279,6 +283,37 @@ class MediumData {
   }
 }
 
+class TeamMemberData {
+  constructor(
+    id,
+    fullName,
+    sex,
+    skills,
+    experienceYears,
+    location,
+    languages,
+    university
+  ) {
+    this.id = id;
+    this.fullName = fullName;
+    this.sex = sex;
+    this.skills = skills.split(",");
+    this.experienceYears = experienceYears;
+    this.location = location;
+    this.languages = languages.split(",");
+    this.university = university;
+  }
+  /**
+   * Construct a Counter from a plain object
+   * @param {{}} json
+   * @return  Track the newly created Track object
+   */
+  static from(json) {
+    const l = Object.assign(new TeamMemberData(), json);
+    return l;
+  }
+}
+
 const models = {
   SkillsData,
   CandidateData,
@@ -290,6 +325,7 @@ const models = {
   WorksData,
   EducationData,
   GithubData,
-  MediumData
+  MediumData,
+  TeamMemberData
 };
 export default models;

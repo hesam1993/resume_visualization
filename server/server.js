@@ -156,6 +156,17 @@ app.get("/api/applications", async (req, res) => {
     }
   });
 
+  app.get("/api/teams/:teamId", async (req, res) => {
+    const teamId = req.params.teamId
+    try {
+      const teamMembers = await dao.getTeamMembers(teamId);
+      res.status(200).json({ teamMembers });
+    } catch (err) {
+      console.log(err);
+      res.status(400).end();
+    }
+  });
+
 app.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);
 });
