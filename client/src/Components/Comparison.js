@@ -4,6 +4,60 @@ import API from "../API/API";
 import { Routes, Route, useParams, useSearchParams } from "react-router-dom";
 function Comparison() {
   let [searchParams, setSearchParams] = useSearchParams();
+  const uiniversities = [
+    "MIT",
+    "University of Cambridge",
+    "Stanford University",
+    "University of Oxford",
+    "Harvard University",
+    "California Institute of Technology (Caltech)",
+    "Imperial College London",
+    "UCL (University College London)",
+    "ETH Zurich (Swiss Federal Institute of Technology)",
+    "University of Chicago",
+    "National University of Singapore (NUS)",
+    "Peking University",
+    "University of Pennsylvania",
+    "Tsinghua University",
+    "University of Edinburgh",
+    "Ecole Polytechnique Fédérale de Lausanne (EPFL)",
+    "Princeton University",
+    "Yale University",
+    "Nanyang Technological University, Singapore (NTU)",
+    "Cornell University",
+    "University of Hong Kong (UKU)",
+    "Columbia University",
+    "University of Tokyo",
+    "Johns Hopkins University",
+    "University of Michigan-Ann Arbor",
+    "Universite PSL",
+    "University of California, Berkeley (UCB)",
+    "University of Manchester",
+    "Seoul National University",
+    "Australian National University",
+    "McGill University",
+    "Northwestern University",
+    "University of Melbourne",
+    "Fudan University",
+    "University of Toronto",
+    "Kyoto University",
+    "King's College London",
+    "Chinese University of Hong Kong (CUHK)",
+    "New York University (NYU)",
+    "Hong Kong University of Science and Technology (HKUST)",
+    "University of Sydney",
+    "KAIST - Korea Advanced Institute of Science & Technology",
+    "Zhejiang University",
+    "University of California, Los Angeles (UCLA)",
+    "University of New South Wales (UNSW Sydney)",
+    "Shanghai Jiao Tong University",
+    "University of British Columbia",
+    "Institut Polytechnique de Paris",
+    "Technical University of Munich",
+    "Duke University",
+    "University of Queensland",
+  ];
+
   const positionId = searchParams.get("pid");
   const firstId = searchParams.get("fid");
   const secondId = searchParams.get("sid");
@@ -15,11 +69,12 @@ function Comparison() {
   useEffect(() => {
     API.getApplication(positionId)
       .then((candidatesInfo) => {
-        const cmpCandidates = [...newCandidates]
+        const cmpCandidates = [...newCandidates];
         candidatesInfo.map((candidate) => {
-          if (candidate.id == firstId) {
+          console.log(candidate)
+          if (candidate.candidateId == firstId) {
             cmpCandidates[0].info = candidate;
-          } else if (candidate.id == secondId) {
+          } else if (candidate.candidateId == secondId) {
             cmpCandidates[1].info = candidate;
           }
         });
@@ -29,16 +84,16 @@ function Comparison() {
 
     API.getEducations()
       .then((educationInfo) => {
-        const cmpCandidates = [...newCandidates]
+        const cmpCandidates = [...newCandidates];
         educationInfo.map((education) => {
-          if (education.id == firstId) {
+          if (education.candidateId == firstId) {
             cmpCandidates[0].education = education;
-          } else if (education.id == secondId) {
+          } else if (education.candidateId == secondId) {
             cmpCandidates[1].education = education;
           }
         });
-        console.log(cmpCandidates)
         setNewCandidates(cmpCandidates);
+        console.log(newCandidates);
       })
       .catch((err) => console.log(err));
   }, []);
@@ -103,6 +158,7 @@ function Comparison() {
                   );
                 })}
               </td>
+
               <td>
                 {newCandidates[1].info.skills.map((skill, index) => {
                   return (
@@ -121,9 +177,17 @@ function Comparison() {
             </tr>
             <tr>
               <td>Education</td>
-              <td>{newCandidates[0].education.location}</td>
 
-              <td>{newCandidates[1].education.location}</td>
+              <td>{newCandidates[0].education.universityName}</td>
+              <td>
+                {uiniversities.includes(
+                  newCandidates[1].education.universityName
+                ) ? (
+                  <h4>{newCandidates[1].education.universityName}</h4>
+                ) : (
+                  newCandidates[1].education.universityName
+                )}
+              </td>
             </tr>
             <tr>
               <td>Work Experience</td>
