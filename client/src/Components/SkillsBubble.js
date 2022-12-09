@@ -2,24 +2,11 @@ import { useD3 } from "../Hooks/useD3";
 import * as d3 from "d3";
 import { useEffect } from "react";
 function SkillsBubbleChart(props) {
-  const hesam = {};
+  const dataset = {};
   let count = 0;
-  hesam.children = [...props.skillsList];
-  const dataset = {
-    children: [
-      { Name: "nodejs", Count: 1 },
-      { Name: "css", Count: 1 },
-      { Name: "javascript", Count: 1 },
-      { Name: "python", Count: 2 },
-      { Name: "sql", Count: 2 },
-      { Name: "reactjs", Count: 2 },
-      { Name: "html", Count: 1 },
-      { Name: "java", Count: 1 },
-      { Name: "c++", Count: 1 },
-      { Name: "azure", Count: 1 },
-      { Name: "mongodb", Count: 1 },
-    ],
-  };
+  dataset.children = [...props.skillsList];
+  console.log(dataset)
+
 
   useEffect(() => {
     count += 1;
@@ -29,15 +16,15 @@ function SkillsBubbleChart(props) {
   }, []);
 
   const drawBubbleChart = () => {
-    var diameter = 600;
+    var diameter = 900;
     var color = d3.scaleOrdinal(d3.schemeSet1);
 
-    var bubble = d3.pack(dataset).size([diameter, diameter]).padding(1.5);
+    var bubble = d3.pack(dataset).size([diameter*1.5, diameter]).padding(1.5);
 
     var svg = d3
       .select("#my_dataviz")
       .append("svg")
-      .attr("width", diameter)
+      .attr("width", diameter*1.5)
       .attr("height", diameter)
       .attr("class", "bubble");
     var nodes = d3.hierarchy(dataset).sum(function (d) {

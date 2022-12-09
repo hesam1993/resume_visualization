@@ -2,16 +2,17 @@ import { useD3 } from "../Hooks/useD3";
 import * as d3 from "d3";
 import { useEffect } from "react";
 function LanguagesBubbleChart(props) {
-  const hesam = {};
+  const dataset = {};
   let count = 0;
-  const dataset = {
-    children: [
-      { Name: "english", Count: 3 },
-      { Name: "persian", Count: 2 },
-      { Name: "italian", Count: 2 },
-      { Name: "French", Count: 1 },
-    ],
-  };
+  dataset.children = [...props.languages];
+  // const dataset = {
+  //   children: [
+  //     { Name: "english", Count: 3 },
+  //     { Name: "persian", Count: 1 },
+  //     { Name: "italian", Count: 2 },
+  //     { Name: "French", Count: 1 },
+  //   ],
+  // };
 
   useEffect(() => {
     count += 1;

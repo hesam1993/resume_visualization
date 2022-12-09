@@ -17,7 +17,8 @@ async function getPositions() {
             p.field,
             p.skills,
             p.sumCandidates,
-            p.status
+            p.status,
+            p.teamId
           )
       );
       return final;
@@ -42,7 +43,8 @@ async function getPositions() {
             p.description,
             p.field,
             p.skills,
-            p.status
+            p.status,
+            p.teamId
           )
       );
       return final;

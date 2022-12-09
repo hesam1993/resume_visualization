@@ -48,7 +48,7 @@ class CandidateData {
 }
 
 class PositionsData {
-  constructor(id, title, description, field, skills, sumCandidates, status) {
+  constructor(id, title, description, field, skills, sumCandidates, status, teamId) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -56,6 +56,7 @@ class PositionsData {
     this.skills = skills.split(",");
     this.sumCandidates = sumCandidates;
     this.status = status;
+    this.teamId = teamId;
   }
   /**
    * Construct a Counter from a plain object
@@ -69,13 +70,14 @@ class PositionsData {
 }
 
 class PositionData {
-  constructor(id, title, description, field, skills, status) {
+  constructor(id, title, description, field, skills, status,teamId) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.field = field;
     this.skills = skills.split(",");
     this.status = status;
+    this.teamId = teamId;
   }
   /**
    * Construct a Counter from a plain object

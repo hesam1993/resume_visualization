@@ -135,6 +135,7 @@ exports.getPosition = (positionId) => {
     positions.description,
     positions.status,
     positions.skills,
+    positions.teamId,
     fields.field
     FROM positions JOIN fields on positions.id = fields.id
     WHERE positions.id = ?
@@ -153,7 +154,8 @@ exports.getPosition = (positionId) => {
             row.description,
             row.field,
             row.skills,
-            row.status
+            row.status,
+            row.teamId
           )
       );
       resolve(candidate);
@@ -430,13 +432,14 @@ class PositionsData {
   }
 }
 class PositionData {
-  constructor(id, title, description, field, skills, status) {
+  constructor(id, title, description, field, skills, status,teamId) {
     this.id = id;
     this.title = title;
     this.description = description;
     this.field = field;
     this.skills = skills;
     this.status = status;
+    this.teamId = teamId;
   }
 }
 
