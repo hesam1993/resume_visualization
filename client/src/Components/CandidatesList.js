@@ -12,7 +12,13 @@ import { useEffect, useState } from "react";
 function CandidatesList() {
   let navigate = useNavigate();
   let tempSkillDonut = [];
-  const [weight, setWeight] = useState({ uni: 1, exp: 1, skills: 1, lang: 1 });
+  const [weight, setweight] = useState({ uni: 1, exp: 1, skills: 1, lang: 1 });
+  const [teamWeight, setTeamWeight] = useState({
+    uni: 1,
+    exp: 1,
+    skills: 1,
+    lang: 1,
+  });
   const [candidates, setCandidates] = useState([]);
   const [secondCandidates, setSecondCandidates] = useState([]);
   const [position, setPosition] = useState([]);
@@ -69,7 +75,7 @@ function CandidatesList() {
     comparisonedCand.sort((a, b) => b.overall - a.overall);
     setSecondCandidates(comparisonedCand);
     // console.log(comparisonedCand);
-  }, [teamMembers, weight]);
+  }, [teamMembers, teamWeight]);
 
   //list skills of the all candidates after having all the team memebrs info
   useEffect(() => {
@@ -111,15 +117,8 @@ function CandidatesList() {
     // console.log(languagesList);
   }, [teamMembers]);
 
-  // useEffect(()=>{
-  //   const comparisonedCand = []
-  //   candidates.map((candidate, index) => {
-  //     const [uniMatch, expMatch, skillsMatch, langMatch, overallMatch] =
-  //       teamComparison(candidate);
-  //       comparisonedCand.push({"id":candidate.id, "name":candidate.candidateName, "uni":uniMatch, "experience":expMatch, "skills":skillsMatch,"lang":langMatch, "overal":overallMatch})})
-  //   console.log(comparisonedCand)
-  // },[candidates])
 
+  //score for each candidate is calculated and stored in the candidates state, after having position and weight changes
   useEffect(() => {
     const scores = [];
     candidates.map((candidate, index) => {
@@ -139,6 +138,8 @@ function CandidatesList() {
     setCandidates(tempCandidates);
     console.log(tempCandidates);
   }, [position, weight]);
+
+  // adding two candidates to comparison
   const addToComparison = (candidate) => {
     if (comparisonList.length < 2) {
       const newComparisonList = [...comparisonList];
@@ -146,6 +147,8 @@ function CandidatesList() {
       setComparisonList(newComparisonList);
     }
   };
+
+  // starting the comparison 
   const doComparison = () => {
     const firstCandidate = comparisonList[0].candidateId;
     const secondCandidate = comparisonList[1].candidateId;
@@ -154,6 +157,7 @@ function CandidatesList() {
     );
   };
 
+  // compute each candidate score based on some factors
   const candidateScoring = (candidate, index) => {
     console.log(candidate.candidateId);
     let langMatch = 0;
@@ -178,19 +182,16 @@ function CandidatesList() {
         }
       });
     });
-    //3 - 2
+    //based on the differenece between minExp and candidate exp years a score is added to the candidate
     const diffExp = position.minExp - candidate.experienceYears;
     switch (diffExp) {
       case 0:
-        expMatch += 70;
-        break;
-      case -1:
         expMatch += 80;
         break;
-      case -2:
+      case -1:
         expMatch += 90;
         break;
-      case -3:
+      case -2:
         expMatch += 100;
         break;
       case 1:
@@ -208,12 +209,13 @@ function CandidatesList() {
     overallMatch += (skillsMatch / 4) * weight.skills;
     overallMatch += (langMatch / 4) * weight.lang;
 
-    // overallMatch =
-    //   overallMatch /
-    //   (parseInt(weight.uni) +
-    //     parseInt(weight.exp) +
-    //     parseInt(weight.skills) +
-    //     parseInt(weight.lang));
+    overallMatch =
+      overallMatch /
+      ((parseInt(weight.uni) +
+        parseInt(weight.exp) +
+        parseInt(weight.skills) +
+        parseInt(weight.lang)) /
+        4);
 
     console.log(
       parseInt(uniMatch),
@@ -231,11 +233,11 @@ function CandidatesList() {
     //     4);
     return {
       cindex: index,
-      universityMatch: Math.ceil(uniMatch),
-      experienceMatch: Math.ceil(expMatch),
-      skillsMatch: Math.ceil(skillsMatch),
-      languageMatch: Math.ceil(langMatch),
-      overallScore: Math.ceil(overallMatch),
+      universityMatch: Math.floor(uniMatch),
+      experienceMatch: Math.floor(expMatch),
+      skillsMatch: Math.floor(skillsMatch),
+      languageMatch: Math.floor(langMatch),
+      overallScore: Math.floor(overallMatch),
     };
   };
 
@@ -295,10 +297,10 @@ function CandidatesList() {
         }
       });
     });
-    overallMatch += (uniMatch / 4) * weight.uni;
-    overallMatch += (expMatch / 4) * weight.exp;
-    overallMatch += (skillsMatch / 4) * weight.skills;
-    overallMatch += (langMatch / 4) * weight.lang;
+    overallMatch += (uniMatch / 4) * teamWeight.uni;
+    overallMatch += (expMatch / 4) * teamWeight.exp;
+    overallMatch += (skillsMatch / 4) * teamWeight.skills;
+    overallMatch += (langMatch / 4) * teamWeight.lang;
     // console.log(
     //   parseInt(weight.uni) +
     //     parseInt(weight.exp) +
@@ -307,10 +309,10 @@ function CandidatesList() {
     // );
     overallMatch =
       overallMatch /
-      ((parseInt(weight.uni) +
-        parseInt(weight.exp) +
-        parseInt(weight.skills) +
-        parseInt(weight.lang)) /
+      ((parseInt(teamWeight.uni) +
+        parseInt(teamWeight.exp) +
+        parseInt(teamWeight.skills) +
+        parseInt(teamWeight.lang)) /
         4);
 
     // console.log(
@@ -335,26 +337,96 @@ function CandidatesList() {
     ];
   };
 
+  const teamWeightInputsUni = (event) => {
+    if (event.target.value != "") {
+      setTeamWeight((previousState) => {
+        return { ...previousState, uni: event.target.value };
+      });
+    }else{
+      setTeamWeight((previousState) => {
+        return { ...previousState, uni: 1 };
+      });
+    }
+    // console.log(weight);
+  };
+  const teamWeightInputsExp = (event) => {
+    if (event.target.value != "") {
+      setTeamWeight((previousState) => {
+        return { ...previousState, exp: event.target.value };
+      });
+    }else{
+      setTeamWeight((previousState) => {
+        return { ...previousState, exp: 1 };
+      });
+    }
+  };
+  const teamWeightInputsSkills = (event) => {
+    if (event.target.value != "") {
+      setTeamWeight((previousState) => {
+        return { ...previousState, skills: event.target.value };
+      });
+    }else{
+      setTeamWeight((previousState) => {
+        return { ...previousState, skills: 1 };
+      });
+    }
+  };
+  const teamWeightInputsLang = (event) => {
+    if (event.target.value != "") {
+      setTeamWeight((previousState) => {
+        return { ...previousState, lang: event.target.value };
+      });
+    }else{
+      setTeamWeight((previousState) => {
+        return { ...previousState, lang: 1 };
+      });
+    }
+  };
+
   const weightInputsUni = (event) => {
-    setWeight((previousState) => {
-      return { ...previousState, uni: event.target.value };
-    });
+    if (event.target.value != "") {
+      setweight((previousState) => {
+        return { ...previousState, uni: event.target.value };
+      });
+    }else{
+      setweight((previousState) => {
+        return { ...previousState, uni: 1 };
+      });
+    }
     // console.log(weight);
   };
   const weightInputsExp = (event) => {
-    setWeight((previousState) => {
-      return { ...previousState, exp: event.target.value };
-    });
+    if (event.target.value != "") {
+      setweight((previousState) => {
+        return { ...previousState, exp: event.target.value };
+      });
+    }else{
+      setweight((previousState) => {
+        return { ...previousState, exp: 1 };
+      });
+    }
   };
   const weightInputsSkills = (event) => {
-    setWeight((previousState) => {
-      return { ...previousState, skills: event.target.value };
-    });
+    if (event.target.value != "") {
+      setweight((previousState) => {
+        return { ...previousState, skills: event.target.value };
+      });
+    }else{
+      setweight((previousState) => {
+        return { ...previousState, skills: 1 };
+      });
+    }
   };
   const weightInputsLang = (event) => {
-    setWeight((previousState) => {
-      return { ...previousState, lang: event.target.value };
-    });
+    if (event.target.value != "") {
+      setweight((previousState) => {
+        return { ...previousState, lang: event.target.value };
+      });
+    }else{
+      setweight((previousState) => {
+        return { ...previousState, lang: 1 };
+      });
+    }
   };
 
   return (
@@ -369,7 +441,7 @@ function CandidatesList() {
           onClick={doComparison}
           disabled={comparisonList.length === 2 ? false : true}
         >
-          Compare Candidates
+          {comparisonList.length === 2 ? "Compare" : "Add candidates to compare"}
         </Button>{" "}
       </Stack>
       <Table striped bordered hover>
@@ -377,9 +449,44 @@ function CandidatesList() {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Field</th>
-            <th>Skills</th>
-            <th>Candidate Score</th>
+            <th>
+              University Match{" "}
+              <input
+                type="text"
+                placeholder="Weight"
+                name="uniWeight"
+                onChange={weightInputsUni}
+              ></input>
+            </th>
+            <th>
+              Languages Match{" "}
+              <input
+                type="text"
+                placeholder="Weight"
+                name="langWeight"
+                onChange={weightInputsLang}
+              ></input>
+            </th>
+            <th>
+              Experience{" "}
+              <input
+                type="text"
+                placeholder="Weight"
+                name="expWeight"
+                onChange={weightInputsExp}
+              ></input>
+            </th>
+            <th>
+              Skills Match{" "}
+              <input
+                type="text"
+                placeholder="Weight"
+                name="skillsWeight"
+                onChange={weightInputsSkills}
+              ></input>
+            </th>
+            <th>Candidate Match</th>
+            <th>Remove</th>
             <th>Details</th>
             <th>Comparison</th>
           </tr>
@@ -388,11 +495,13 @@ function CandidatesList() {
           {candidates.map((candidate, index) => {
             let refLink = `/profile?cId=${candidate.id}`;
             return (
-              <tr key={index}>
-                <td>{candidate.candidateId}</td>
+              <tr key={index+1}>
+                <td>{index+1}</td>
                 <td>{candidate.candidateName}</td>
-                <td>{candidate.field}</td>
-                <td>
+                <td>{candidate.universityMatch}%</td>
+                <td>{candidate.languageMatch}%</td>
+                <td>{candidate.experienceMatch}%</td>
+                {/* <td>
                   {candidate.skills.map((s, index) => {
                     return (
                       <Badge key={index} className="mx-1" pill bg="primary">
@@ -400,8 +509,14 @@ function CandidatesList() {
                       </Badge>
                     );
                   })}
+                </td> */}
+                <td>{candidate.skillsMatch}%</td>
+                <td>{candidate.overallScore}%</td>
+                <td>
+                  <Link to={refLink}>
+                    <Button variant="danger">Remove</Button>{" "}
+                  </Link>
                 </td>
-                <td>{candidate.overallScore}</td>
                 <td>
                   <Link to={refLink}>
                     <Button variant="primary">Details</Button>{" "}
@@ -422,6 +537,7 @@ function CandidatesList() {
           })}
         </tbody>
       </Table>
+      
       <h3>Team Comparison Results</h3>
       <Table striped bordered hover>
         <thead>
@@ -434,7 +550,7 @@ function CandidatesList() {
                 type="text"
                 placeholder="Weight"
                 name="uniWeight"
-                onChange={weightInputsUni}
+                onChange={teamWeightInputsUni}
               ></input>
             </th>
             <th>
@@ -443,7 +559,7 @@ function CandidatesList() {
                 type="text"
                 placeholder="Weight"
                 name="expWeight"
-                onChange={weightInputsExp}
+                onChange={teamWeightInputsExp}
               ></input>
             </th>
             <th>
@@ -452,7 +568,7 @@ function CandidatesList() {
                 type="text"
                 placeholder="Weight"
                 name="skillsWeight"
-                onChange={weightInputsSkills}
+                onChange={teamWeightInputsSkills}
               ></input>
             </th>
             <th>Skills Miss</th>
@@ -462,7 +578,7 @@ function CandidatesList() {
                 type="text"
                 placeholder="Weight"
                 name="langWeight"
-                onChange={weightInputsLang}
+                onChange={teamWeightInputsLang}
               ></input>
             </th>
             <th>Overall Comparison </th>
@@ -474,8 +590,8 @@ function CandidatesList() {
             //   teamComparison(candidate);
             // let refLink = `/profile?cId=${candidate.id}`;
             return (
-              <tr key={index}>
-                <td>{candidate.id}</td>
+              <tr key={index+1}>
+                <td>{index+1}</td>
                 <td>{candidate.name}</td>
                 <td>{candidate.uni}%</td>
                 <td>{candidate.experience}%</td>
