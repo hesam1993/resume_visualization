@@ -16,7 +16,12 @@ class CandidateData {
     title,
     aboutMe,
     languages,
-    university
+    university,
+    skillsMatch,
+    experienceMatch,
+    universityMatch,
+    languageMatch,
+    overallScore
   ) {
     this.id = id;
     this.fullName = fullName;
@@ -34,7 +39,12 @@ class CandidateData {
     this.title = title;
     this.aboutMe = aboutMe;
     this.languages = languages.split(",");
-    this.university = university
+    this.university = university;
+    this.skillsMatch = skillsMatch;
+    this.experienceMatch = experienceMatch;
+    this.universityMatch = universityMatch;
+    this.languageMatch = languageMatch;
+    this.overallScore = overallScore
   }
   /**
    * Construct a Counter from a plain object
@@ -48,7 +58,18 @@ class CandidateData {
 }
 
 class PositionsData {
-  constructor(id, title, description, field, skills, sumCandidates, status, teamId) {
+  constructor(
+    id,
+    title,
+    description,
+    field,
+    skills,
+    sumCandidates,
+    status,
+    teamId,
+    minExp,
+    languages
+  ) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -57,6 +78,8 @@ class PositionsData {
     this.sumCandidates = sumCandidates;
     this.status = status;
     this.teamId = teamId;
+    this.minExp = minExp;
+    this.languages = languages.split(",");
   }
   /**
    * Construct a Counter from a plain object
@@ -70,7 +93,17 @@ class PositionsData {
 }
 
 class PositionData {
-  constructor(id, title, description, field, skills, status,teamId) {
+  constructor(
+    id,
+    title,
+    description,
+    field,
+    skills,
+    status,
+    teamId,
+    minExp,
+    languages
+  ) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -78,6 +111,8 @@ class PositionData {
     this.skills = skills.split(",");
     this.status = status;
     this.teamId = teamId;
+    this.minExp = minExp;
+    this.languages = languages.split(",");;
   }
   /**
    * Construct a Counter from a plain object
@@ -97,7 +132,6 @@ class ApplicationData {
     candidateName,
     positionId,
     positionTitle,
-    candidateScore,
     hrScore,
     sex,
     age,
@@ -116,7 +150,6 @@ class ApplicationData {
     this.candidateName = candidateName;
     this.positionTitle = positionTitle;
     this.positionId = positionId;
-    this.candidateScore = candidateScore;
     this.hrScore = hrScore;
     this.sex = sex;
     this.age = age;
@@ -328,6 +361,6 @@ const models = {
   EducationData,
   GithubData,
   MediumData,
-  TeamMemberData
+  TeamMemberData,
 };
 export default models;

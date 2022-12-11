@@ -14,7 +14,7 @@ function Dounut(props) {
   {candidateName: 'Candidate 10', skillsMatch: 10}];
   let count = 0;
   
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     count += 1;
@@ -52,7 +52,7 @@ function Dounut(props) {
       return d3.arc().innerRadius(radius).outerRadius(radius);
     };
     data.forEach(function (d) {
-      console.log(d);
+      // console.log(d);
       //     d.date = parseDate(d.date);
     });
     var color = d3

@@ -23,33 +23,34 @@ function CandidatesList() {
   const [comparisonList, setComparisonList] = useState([]);
   const [cmpBtn, setCmpBtn] = useState(true);
   const positionId = window.location.href.split("=")[1];
+
+  // getting application data and then positions data
   useEffect(() => {
     API.getApplication(positionId)
       .then((candidatesInfo) => {
-        candidatesInfo.sort((a, b) => a.candidateScore - b.candidateScore);
         setCandidates(candidatesInfo);
-
-        console.log(`it is candidates data : ${candidates}`);
+        // console.log(`it is candidates data : ${candidates}`);
       })
       .catch((err) => console.log(err));
     API.getPosition(positionId)
       .then((positionInfo) => {
         setPosition(positionInfo[0]);
-        console.log(positionInfo);
+        // console.log(positionInfo);
       })
       .catch((err) => console.log(err));
   }, []);
 
+  // getting team members info after having the position info
   useEffect(() => {
     API.getTeamMembers(position.teamId)
       .then((teamInfo) => {
         setTeamMembers(teamInfo);
-        console.log(teamInfo);
       })
       .catch((err) => console.log(err));
   }, [position]);
 
-  useEffect(()=>{
+  //calculating team comparison score after having team members and weight info
+  useEffect(() => {
     const comparisonedCand = [];
     candidates.map((candidate, index) => {
       const [uniMatch, expMatch, skillsMatch, langMatch, overallMatch] =
@@ -64,13 +65,13 @@ function CandidatesList() {
         overall: overallMatch,
       });
     });
-    
-    comparisonedCand.sort((a, b) => b.overall - a.overall );
-    setSecondCandidates(comparisonedCand)
-    console.log(comparisonedCand);
-  },[teamMembers,weight])
 
+    comparisonedCand.sort((a, b) => b.overall - a.overall);
+    setSecondCandidates(comparisonedCand);
+    // console.log(comparisonedCand);
+  }, [teamMembers, weight]);
 
+  //list skills of the all candidates after having all the team memebrs info
   useEffect(() => {
     const skills = [];
     const tempSkills = [];
@@ -87,9 +88,10 @@ function CandidatesList() {
     });
 
     setSkillsList(tempSkills);
-    console.log(skillsList);
+    // console.log(skillsList);
   }, [teamMembers]);
 
+  //list languages of all candidates after having all the team members info
   useEffect(() => {
     const languages = [];
     const tempLanguages = [];
@@ -106,7 +108,7 @@ function CandidatesList() {
     });
 
     setLanguagesList(tempLanguages);
-    console.log(languagesList);
+    // console.log(languagesList);
   }, [teamMembers]);
 
   // useEffect(()=>{
@@ -118,6 +120,25 @@ function CandidatesList() {
   //   console.log(comparisonedCand)
   // },[candidates])
 
+  useEffect(() => {
+    const scores = [];
+    candidates.map((candidate, index) => {
+      scores.push(candidateScoring(candidate, index));
+    });
+    let tempCandidates = [...candidates];
+    scores.map((sc) => {
+      const candidate = tempCandidates[sc.cindex];
+      candidate.skillsMatch = sc.skillsMatch;
+      candidate.experienceMatch = sc.experienceMatch;
+      candidate.universityMatch = sc.universityMatch;
+      candidate.languageMatch = sc.languageMatch;
+      candidate.overallScore = sc.overallScore;
+    });
+
+    tempCandidates.sort((a, b) => b.overallScore - a.overallScore);
+    setCandidates(tempCandidates);
+    console.log(tempCandidates);
+  }, [position, weight]);
   const addToComparison = (candidate) => {
     if (comparisonList.length < 2) {
       const newComparisonList = [...comparisonList];
@@ -131,6 +152,91 @@ function CandidatesList() {
     navigate(
       `/comparison?fid=${firstCandidate}&sid=${secondCandidate}&pid=${positionId}`
     );
+  };
+
+  const candidateScoring = (candidate, index) => {
+    console.log(candidate.candidateId);
+    let langMatch = 0;
+    let skillsMatch = 0;
+    let expMatch = 0;
+    let uniMatch = 100;
+    let overallMatch = 0;
+    let wholeSkills = [];
+    let wholeLanguages = [];
+
+    position.skills.map((posSkill) => {
+      candidate.skills.map((cSkill) => {
+        if (posSkill === cSkill) {
+          skillsMatch += 100 / position.skills.length;
+        }
+      });
+    });
+    position.languages.map((language) => {
+      candidate.languages.map((cLanguage) => {
+        if (language === cLanguage) {
+          langMatch += 100 / position.languages.length;
+        }
+      });
+    });
+    //3 - 2
+    const diffExp = position.minExp - candidate.experienceYears;
+    switch (diffExp) {
+      case 0:
+        expMatch += 70;
+        break;
+      case -1:
+        expMatch += 80;
+        break;
+      case -2:
+        expMatch += 90;
+        break;
+      case -3:
+        expMatch += 100;
+        break;
+      case 1:
+        expMatch += 60;
+        break;
+      case diffExp > 1:
+        expMatch += 30;
+        break;
+      default:
+        expMatch += 30;
+    }
+
+    overallMatch += (uniMatch / 4) * weight.uni;
+    overallMatch += (expMatch / 4) * weight.exp;
+    overallMatch += (skillsMatch / 4) * weight.skills;
+    overallMatch += (langMatch / 4) * weight.lang;
+
+    // overallMatch =
+    //   overallMatch /
+    //   (parseInt(weight.uni) +
+    //     parseInt(weight.exp) +
+    //     parseInt(weight.skills) +
+    //     parseInt(weight.lang));
+
+    console.log(
+      parseInt(uniMatch),
+      parseInt(expMatch),
+      parseInt(skillsMatch),
+      parseInt(langMatch),
+      Math.ceil(overallMatch)
+    );
+    // overallMatch =
+    //   overallMatch /
+    //   ((parseInt(weight.uni) +
+    //     parseInt(weight.exp) +
+    //     parseInt(weight.skills) +
+    //     parseInt(weight.lang)) /
+    //     4);
+    return {
+      cindex: index,
+      universityMatch: Math.ceil(uniMatch),
+      experienceMatch: Math.ceil(expMatch),
+      skillsMatch: Math.ceil(skillsMatch),
+      languageMatch: Math.ceil(langMatch),
+      overallScore: Math.ceil(overallMatch),
+    };
   };
 
   const teamComparison = (candidate) => {
@@ -193,26 +299,27 @@ function CandidatesList() {
     overallMatch += (expMatch / 4) * weight.exp;
     overallMatch += (skillsMatch / 4) * weight.skills;
     overallMatch += (langMatch / 4) * weight.lang;
-    console.log(
-      parseInt(weight.uni) +
-        parseInt(weight.exp) +
-        parseInt(weight.skills) +
-        parseInt(weight.lang)
-    );
+    // console.log(
+    //   parseInt(weight.uni) +
+    //     parseInt(weight.exp) +
+    //     parseInt(weight.skills) +
+    //     parseInt(weight.lang)
+    // );
     overallMatch =
       overallMatch /
-      (parseInt(weight.uni) +
+      ((parseInt(weight.uni) +
         parseInt(weight.exp) +
         parseInt(weight.skills) +
-        parseInt(weight.lang));
+        parseInt(weight.lang)) /
+        4);
 
-    console.log(
-      Math.ceil(uniMatch),
-      Math.ceil(expMatch),
-      Math.ceil(skillsMatch),
-      Math.ceil(langMatch),
-      Math.ceil(overallMatch)
-    );
+    // console.log(
+    //   Math.ceil(uniMatch),
+    //   Math.ceil(expMatch),
+    //   Math.ceil(skillsMatch),
+    //   Math.ceil(langMatch),
+    //   Math.ceil(overallMatch)
+    // );
 
     tempSkillDonut.push({
       candidateName: candidate.candidateName,
@@ -232,7 +339,7 @@ function CandidatesList() {
     setWeight((previousState) => {
       return { ...previousState, uni: event.target.value };
     });
-    console.log(weight);
+    // console.log(weight);
   };
   const weightInputsExp = (event) => {
     setWeight((previousState) => {
@@ -270,11 +377,8 @@ function CandidatesList() {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Age</th>
-            <th>Sex</th>
             <th>Field</th>
             <th>Skills</th>
-            <th>HR Score</th>
             <th>Candidate Score</th>
             <th>Details</th>
             <th>Comparison</th>
@@ -287,8 +391,6 @@ function CandidatesList() {
               <tr key={index}>
                 <td>{candidate.candidateId}</td>
                 <td>{candidate.candidateName}</td>
-                <td>{candidate.age}</td>
-                <td>{candidate.sex}</td>
                 <td>{candidate.field}</td>
                 <td>
                   {candidate.skills.map((s, index) => {
@@ -299,8 +401,7 @@ function CandidatesList() {
                     );
                   })}
                 </td>
-                <td>{candidate.hrScore}</td>
-                <td>{candidate.candidateScore}</td>
+                <td>{candidate.overallScore}</td>
                 <td>
                   <Link to={refLink}>
                     <Button variant="primary">Details</Button>{" "}
@@ -398,15 +499,15 @@ function CandidatesList() {
         )}
       </Row>
       <Row>
+        {skillsList.length > 0 && (
+          <NewBarChart skillsList={skillsList}></NewBarChart>
+        )}
+      </Row>
+      <Row>
         {languagesList.length > 0 && (
           <LanguagesBubbleChart
             languages={languagesList}
           ></LanguagesBubbleChart>
-        )}
-      </Row>
-      <Row>
-        {skillsList.length > 0 && (
-          <NewBarChart skillsList={skillsList}></NewBarChart>
         )}
       </Row>
     </>

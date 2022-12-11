@@ -5,7 +5,12 @@ function NewBarChart(props) {
   let data = {};
   let count = 0;
   data = [...props.skillsList];
-  console.log(data)
+  // console.log(Math.max(data))
+  let max = 0
+  data.forEach(dd => {
+    max < dd.Count ? max = dd.Count : max = max
+    
+  });
 
   useEffect(() => {
     count += 1;
@@ -37,9 +42,9 @@ function NewBarChart(props) {
   // }, []);
 
   const drawBubbleChart = () => {
-    var margin = { top: 30, right: 30, bottom: 70, left: 60 },
+    var margin = { top: 30, right: 30, bottom: 110, left: 60 },
       width = 2000 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+      height = 500 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3
@@ -71,7 +76,7 @@ function NewBarChart(props) {
       .style("text-anchor", "end");
 
     // Add Y axis
-    var y = d3.scaleLinear().domain([0, 100]).range([height, 0]);
+    var y = d3.scaleLinear().domain([0, max*1.2]).range([height, 0]);
     svg.append("g").call(d3.axisLeft(y));
 
     // Bars

@@ -5,7 +5,7 @@ function SkillsBubbleChart(props) {
   const dataset = {};
   let count = 0;
   dataset.children = [...props.skillsList];
-  console.log(dataset)
+  // console.log(dataset)
 
 
   useEffect(() => {

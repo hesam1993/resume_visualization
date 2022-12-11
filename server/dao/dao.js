@@ -101,6 +101,8 @@ exports.getPositions = () => {
   return new Promise((resolve, reject) => {
     const sql = `select positions.id,positions.title,
     positions.description,
+    positions.minExp,
+    positions.languages,
     fields.field,
     positions.skills,COUNT(DISTINCT applications.candidateId)
     as 'sumCandidates',positions.status from applications
@@ -119,7 +121,9 @@ exports.getPositions = () => {
             row.field,
             row.skills,
             row.sumCandidates,
-            row.status
+            row.status,
+            row.minExp,
+            row.languages
           )
       );
       resolve(positions);
@@ -133,6 +137,8 @@ exports.getPosition = (positionId) => {
     positions.id,
     positions.title,
     positions.description,
+    positions.minExp,
+    positions.languages,
     positions.status,
     positions.skills,
     positions.teamId,
@@ -155,7 +161,9 @@ exports.getPosition = (positionId) => {
             row.field,
             row.skills,
             row.status,
-            row.teamId
+            row.teamId,
+            row.minExp,
+            row.languages
           )
       );
       resolve(candidate);
@@ -185,7 +193,7 @@ exports.getApplications = () => {
 
 exports.getApplication = (positionId) => {
   return new Promise((resolve, reject) => {
-    const sql = `select applications.id,applications.candidateScore,applications.hrScore,applications.positionId,
+    const sql = `select applications.id,applications.hrScore,applications.positionId,
     positions.title as 'positionTitle',candidates.fullName as 'candidateName',candidates.age,candidates.sex,candidates.university,
 	  candidates.experienceYears,candidates.educationId,candidates.workId,candidates.languages,candidates.location,candidates.title as 'Candidate Role',
     fields.field,candidates.skills,candidates.id as 'candidateId' from applications
@@ -204,7 +212,6 @@ exports.getApplication = (positionId) => {
             row.candidateName,
             row.positionId,
             row.positionTitle,
-            row.candidateScore,
             row.hrScore,
             row.sex,
             row.age,
@@ -376,7 +383,6 @@ exports.getTeamMembers = (teamId) => {
   });
 };
 
-
 // ===========================================================================================
 
 class CandidateData {
@@ -397,7 +403,12 @@ class CandidateData {
     title,
     aboutMe,
     languages,
-    univerity
+    univerity,
+    skillsMatch,
+    experienceMatch,
+    universityMatch,
+    languageMatch,
+    overallScore
   ) {
     this.id = id;
     this.fullName = fullName;
@@ -416,12 +427,26 @@ class CandidateData {
     this.aboutMe = aboutMe;
     this.languages = languages;
     this.univerity = univerity;
-
+    this.skillsMatch = 0;
+    this.experienceMatch = 0;
+    this.universityMatch = 0;
+    this.languageMatch = 0;
+    this.overallScore = 0;
   }
 }
 
 class PositionsData {
-  constructor(id, title, description, field, skills, sumCandidates, status) {
+  constructor(
+    id,
+    title,
+    description,
+    field,
+    skills,
+    sumCandidates,
+    status,
+    minExp,
+    languages
+  ) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -429,10 +454,22 @@ class PositionsData {
     this.skills = skills;
     this.sumCandidates = sumCandidates;
     this.status = status;
+    this.minExp = minExp;
+    this.languages = languages;
   }
 }
 class PositionData {
-  constructor(id, title, description, field, skills, status,teamId) {
+  constructor(
+    id,
+    title,
+    description,
+    field,
+    skills,
+    status,
+    teamId,
+    minExp,
+    languages
+  ) {
     this.id = id;
     this.title = title;
     this.description = description;
@@ -440,6 +477,8 @@ class PositionData {
     this.skills = skills;
     this.status = status;
     this.teamId = teamId;
+    this.minExp = minExp;
+    this.languages = languages;
   }
 }
 
@@ -450,7 +489,6 @@ class ApplicationData {
     candidateName,
     positionId,
     positionTitle,
-    candidateScore,
     hrScore,
     sex,
     age,
@@ -469,7 +507,6 @@ class ApplicationData {
     this.candidateName = candidateName;
     this.positionTitle = positionTitle;
     this.positionId = positionId;
-    this.candidateScore = candidateScore;
     this.hrScore = hrScore;
     this.sex = sex;
     this.age = age;
@@ -481,7 +518,7 @@ class ApplicationData {
     this.languages = languages;
     this.location = location;
     this.candidateRole = candidateRole;
-    this.university = university
+    this.university = university;
   }
 }
 class ApplicationsData {
@@ -569,6 +606,5 @@ class TeamMemberData {
     this.location = location;
     this.languages = languages;
     this.university = university;
-
   }
 }
