@@ -1,5 +1,5 @@
 import Table from "react-bootstrap/Table";
-import Modal from 'react-bootstrap/Modal';
+import Modal from "react-bootstrap/Modal";
 import Badge from "react-bootstrap/Badge";
 import SkillsBubbleChart from "./SkillsBubble";
 import Dounut from "./Donut";
@@ -112,7 +112,7 @@ function CandidatesList() {
     "Pennsylvania State University",
     "Sungkyunkwan University(SKKU)",
     "University of Science and Technology of China",
-    "Technical University of Denmark"
+    "Technical University of Denmark",
   ];
   let tempSkillDonut = [];
   const [weight, setweight] = useState({ uni: 1, exp: 1, skills: 1, lang: 1 });
@@ -176,6 +176,8 @@ function CandidatesList() {
         overall: overallMatch,
       });
     });
+    console.log(`it is FIRST`);
+    console.log(comparisonedCand);
 
     comparisonedCand.sort((a, b) => b.overall - a.overall);
     setSecondCandidates(comparisonedCand);
@@ -243,6 +245,32 @@ function CandidatesList() {
     console.log(tempCandidates);
   }, [position, weight]);
 
+  const sortCandidates = (sortFactor) => {
+    const comparisonedCand = [...candidates];
+    switch (sortFactor) {
+      case "experienceMatch":
+        comparisonedCand.sort((a, b) => b.experienceMatch - a.experienceMatch);
+        break;
+      case "skillsMatch":
+        comparisonedCand.sort((a, b) => b.skillsMatch - a.skillsMatch);
+        break;
+      case "universityMatch":
+        comparisonedCand.sort((a, b) => b.universityMatch - a.universityMatch);
+        break;
+      case "languageMatch":
+        comparisonedCand.sort((a, b) => b.languageMatch - a.languageMatch);
+        break;
+      case "overallScore":
+        comparisonedCand.sort((a, b) => b.overallScore - a.overallScore);
+        break;
+      default:
+        comparisonedCand.sort((a, b) => b.overallScore - a.overallScore);
+        break;
+    }
+    console.log(comparisonedCand);
+    setCandidates(comparisonedCand);
+  };
+
   // adding two candidates to comparison
   const addToComparison = (candidate) => {
     if (comparisonList.length < 2) {
@@ -281,9 +309,9 @@ function CandidatesList() {
     });
 
     topUnis.map((topUni) => {
-        if (topUni === candidate.university) {
-          uniMatch += 100
-        }
+      if (topUni === candidate.university) {
+        uniMatch += 100;
+      }
     });
     position.languages.map((language) => {
       candidate.languages.map((cLanguage) => {
@@ -538,7 +566,7 @@ function CandidatesList() {
       });
     }
   };
-  const MyVerticallyCenteredModal = (props)=>{
+  const MyVerticallyCenteredModal = (props) => {
     return (
       <Modal
         {...props}
@@ -553,95 +581,95 @@ function CandidatesList() {
         </Modal.Header>
         <Modal.Body>
           <Table striped bordered hover>
-          <thead>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Name</td>
-              <td>{selectedCandidate.candidateName}</td>
-            </tr>{" "}
-            <tr>
-              <td>Candidate Score</td>
-              <td>{selectedCandidate.overallScore}%</td>
-
-            </tr>{" "}
-            <tr>
-              <td>Work Experience</td>
-              <td>{selectedCandidate.experienceYears} years</td>
-            </tr>
-            <tr>
-              <td>Skills Match</td>
-              <td>{selectedCandidate.skillsMatch}%</td>
-
-            </tr>{" "}
-            <tr>
-              <td>Skills</td>
-              <td>
-              {Object.keys(selectedCandidate).length !== 0 && selectedCandidate.skills.map((skill, index) => {
-                    let badgeColor = position.skills.indexOf(skill) !== -1 ? "success" : "primary"
-                    return (
-                      <Badge key={index} className="mx-1" pill bg={badgeColor}>
-                        {skill}
-                      </Badge>
-                    );
-                  })}
-              </td>
-
-            </tr>{" "}
-            {/* <tr>
+            <thead></thead>
+            <tbody>
+              <tr>
+                <td>Name</td>
+                <td>{selectedCandidate.candidateName}</td>
+              </tr>{" "}
+              <tr>
+                <td>Candidate Score</td>
+                <td>{selectedCandidate.overallScore}%</td>
+              </tr>{" "}
+              <tr>
+                <td>Work Experience</td>
+                <td>{selectedCandidate.experienceYears} years</td>
+              </tr>
+              <tr>
+                <td>Skills Match</td>
+                <td>{selectedCandidate.skillsMatch}%</td>
+              </tr>{" "}
+              <tr>
+                <td>Skills</td>
+                <td>
+                  {Object.keys(selectedCandidate).length !== 0 &&
+                    selectedCandidate.skills.map((skill, index) => {
+                      let badgeColor =
+                        position.skills.indexOf(skill) !== -1
+                          ? "success"
+                          : "primary";
+                      return (
+                        <Badge
+                          key={index}
+                          className="mx-1"
+                          pill
+                          bg={badgeColor}
+                        >
+                          {skill}
+                        </Badge>
+                      );
+                    })}
+                </td>
+              </tr>{" "}
+              {/* <tr>
               <td>Experience</td>
               <td>{selectedCandidate.experienceYears}</td>
             </tr> */}
-            <tr>
-              <td>University</td>
-              <td>{selectedCandidate.university}</td>
-            </tr>
-
-
-            {/* <tr>
+              <tr>
+                <td>University</td>
+                <td>{selectedCandidate.university}</td>
+              </tr>
+              {/* <tr>
               <td>Location</td>
               <td>{selectedCandidate.location}</td>
             </tr> */}
-            
-            <tr>
-              <td>Field</td>
-              <td>{selectedCandidate.field}</td>
-
-            </tr>{" "}
-            <tr>
-              <td>Role</td>
-              <td>{selectedCandidate.positionTitle}</td>
-            </tr>
-            <tr>
-              <td>Languages</td>
-              <td>
-              {Object.keys(selectedCandidate).length !== 0 && selectedCandidate.languages.map((language, index) => {
-                    return (
-                      <Badge key={index} className="mx-1" pill bg="primary">
-                        {language}
-                      </Badge>
-                    );
-                  })}
-
-              </td>
-
-            </tr>
-          </tbody>
-        </Table>
+              <tr>
+                <td>Field</td>
+                <td>{selectedCandidate.field}</td>
+              </tr>{" "}
+              <tr>
+                <td>Role</td>
+                <td>{selectedCandidate.positionTitle}</td>
+              </tr>
+              <tr>
+                <td>Languages</td>
+                <td>
+                  {Object.keys(selectedCandidate).length !== 0 &&
+                    selectedCandidate.languages.map((language, index) => {
+                      return (
+                        <Badge key={index} className="mx-1" pill bg="primary">
+                          {language}
+                        </Badge>
+                      );
+                    })}
+                </td>
+              </tr>
+            </tbody>
+          </Table>
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.onHide}>Close</Button>
         </Modal.Footer>
       </Modal>
     );
-  }
+  };
 
-  const prepareModal =(candidate)=>{
-    setSelectedCandidate(candidate)
-    if(selectedCandidate){
-      setModalShow(true)
+  const prepareModal = (candidate) => {
+    setSelectedCandidate(candidate);
+    if (selectedCandidate) {
+      setModalShow(true);
     }
-  }
+  };
   return (
     <>
       <Stack direction="horizontal" className="p-3" gap={3}>
@@ -664,8 +692,13 @@ function CandidatesList() {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>
-              Top University Match{" "}
+            <th
+            >
+              <p
+            style={{cursor:"pointer"}}
+              onClick={() => {
+                sortCandidates("universityMatch");
+              }}>Top University Match</p>{" "}
               <input
                 type="text"
                 placeholder="Weight"
@@ -673,8 +706,13 @@ function CandidatesList() {
                 onChange={weightInputsUni}
               ></input>
             </th>
-            <th>
-              Languages Match{" "}
+            <th
+            >
+              <p
+            style={{cursor:"pointer"}}
+              onClick={() => {
+                sortCandidates("languageMatch");
+              }}>Languages Match</p>{" "}
               <input
                 type="text"
                 placeholder="Weight"
@@ -682,17 +720,28 @@ function CandidatesList() {
                 onChange={weightInputsLang}
               ></input>
             </th>
-            <th>
-              Experience Match{" "}
+            <th
+            >
+              <p 
+            style={{cursor:"pointer"}}
+              onClick={() => {
+                sortCandidates("experienceMatch");
+              }}>Experience Match</p>{" "}
               <input
+            
                 type="text"
                 placeholder="Weight"
                 name="expWeight"
                 onChange={weightInputsExp}
               ></input>
             </th>
-            <th>
-              Skills Match{" "}
+            <th
+            
+            >
+              <p style={{cursor:"pointer"}}
+              onClick={() => {
+                sortCandidates("skillsMatch");
+              }}>Skills Match</p>{" "}
               <input
                 type="text"
                 placeholder="Weight"
@@ -700,7 +749,15 @@ function CandidatesList() {
                 onChange={weightInputsSkills}
               ></input>
             </th>
-            <th>Candidate Match</th>
+            <th
+            
+            >
+              <p style={{cursor:"pointer"}}
+              onClick={() => {
+                sortCandidates("overallScore");
+              }}>
+              Candidate Match</p>
+            </th>
             <th>Remove</th>
             <th>Details</th>
             <th>Comparison</th>
@@ -745,7 +802,12 @@ function CandidatesList() {
                   {/* <Link to={refLink}>
                     <Button variant="primary">Details Pop up</Button>{" "}
                   </Link> */}
-                  <Button variant="primary" onClick={() => prepareModal(candidate)}>Details</Button>
+                  <Button
+                    variant="primary"
+                    onClick={() => prepareModal(candidate)}
+                  >
+                    Details
+                  </Button>
                 </td>
                 <td>
                   <Button
