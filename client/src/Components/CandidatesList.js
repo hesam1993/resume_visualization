@@ -1,4 +1,5 @@
 import Table from "react-bootstrap/Table";
+import Modal from 'react-bootstrap/Modal';
 import Badge from "react-bootstrap/Badge";
 import SkillsBubbleChart from "./SkillsBubble";
 import Dounut from "./Donut";
@@ -11,6 +12,108 @@ import { Button, Stack, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 function CandidatesList() {
   let navigate = useNavigate();
+  const topUnis = [
+    "Massachusetts Institute of Technology (MIT) ",
+    "University of Oxford",
+    "Stanford University",
+    "University of Cambridge",
+    "Harvard University",
+    "California Institute of Technology (Caltech)",
+    "Imperial College London",
+    "ETH Zurich - Swiss Federal Institute of Technology",
+    "UCL",
+    "University of Chicago",
+    "National University of Singapore (NUS)",
+    "Nanyang Technological University, Singapore (NTU)",
+    "University of Pennsylvania",
+    "EPFL",
+    "Yale University",
+    "The University of Edinburgh",
+    "Tsinghua University",
+    "Peking University",
+    "Columbia University",
+    "Princeton University",
+    "Cornell University",
+    "The University of Hong Kong",
+    "The University of Tokyo",
+    "University of Michigan-Ann Arbor",
+    "Johns Hopkins University",
+    "University of Toronto",
+    "McGill University",
+    "The Australian National University",
+    "The University of Manchester",
+    "Northwestern University",
+    "Fudan University",
+    "University of California, Berkeley (UCB)",
+    "Kyoto University",
+    "The Hong Kong University of Science and Technology",
+    "King's College London",
+    "Seoul National University",
+    "The University of Melbourne",
+    "The University of Sydney",
+    "The Chinese University of Hong Kong (CUHK)",
+    "University of California, Los Angeles (UCLA)",
+    "KAIST - Korea Advanced Institute of Science & Technology",
+    "New York University (NYU)",
+    "The University of New South Wales (UNSW Sydney)",
+    "Université PSL",
+    "Zhejiang University",
+    "University of British Columbia",
+    "The University of Queensland",
+    '"University of California, San Diego (UCSD)"',
+    "Institut Polytechnique de Paris",
+    "The London School of Economics and Political Science (LSE)",
+    "Shanghai Jiao Tong University",
+    "Technical University of Munich",
+    "Duke University",
+    "Carnegie Mellon University",
+    "City University of Hong Kong",
+    "University of Amsterdam",
+    "Tokyo Institute of Technology (Tokyo Tech)",
+    "Delft University of Technology",
+    "Monash University",
+    "Brown University",
+    "The University of Warwick",
+    "University of Bristol",
+    "Ruprecht-Karls-Universität Heidelberg",
+    "Ludwig-Maximilians-Universität München",
+    "Universiti Malaya (UM)",
+    "The Hong Kong Polytechnic University",
+    "University of Texas at Austin",
+    "National Taiwan University (NTU)",
+    "Universidad de Buenos Aires (UBA)",
+    "KU Leuven",
+    "University of Zurich",
+    "Sorbonne University",
+    "University of Glasgow",
+    "Korea University",
+    "Osaka University",
+    "University of Wisconsin-Madison",
+    "University of Southampton",
+    "Lomonosov Moscow State University",
+    "University of Copenhagen",
+    "Yonsei University",
+    "Pohang University of Science And Technology (POSTECH)",
+    "Durham University",
+    "Tohoku University",
+    "University of Illinois at Urbana-Champaign",
+    "The University of Auckland",
+    "University of Washington",
+    "Université Paris-Saclay",
+    "Lund University",
+    "Georgia Institute of Technology",
+    "KTH Royal Institute of Technology ",
+    "University of Birmingham",
+    "University of St Andrews",
+    "University of Leeds",
+    "The University of Western Australia",
+    "Rice University",
+    "The University of Sheffield",
+    "Pennsylvania State University",
+    "Sungkyunkwan University(SKKU)",
+    "University of Science and Technology of China",
+    "Technical University of Denmark"
+  ];
   let tempSkillDonut = [];
   const [weight, setweight] = useState({ uni: 1, exp: 1, skills: 1, lang: 1 });
   const [teamWeight, setTeamWeight] = useState({
@@ -20,6 +123,8 @@ function CandidatesList() {
     lang: 1,
   });
   const [candidates, setCandidates] = useState([]);
+  const [selectedCandidate, setSelectedCandidate] = useState({});
+  const [modalShow, setModalShow] = useState(false);
   const [secondCandidates, setSecondCandidates] = useState([]);
   const [position, setPosition] = useState([]);
   const [skillsList, setSkillsList] = useState([]);
@@ -117,7 +222,6 @@ function CandidatesList() {
     // console.log(languagesList);
   }, [teamMembers]);
 
-
   //score for each candidate is calculated and stored in the candidates state, after having position and weight changes
   useEffect(() => {
     const scores = [];
@@ -148,7 +252,7 @@ function CandidatesList() {
     }
   };
 
-  // starting the comparison 
+  // starting the comparison
   const doComparison = () => {
     const firstCandidate = comparisonList[0].candidateId;
     const secondCandidate = comparisonList[1].candidateId;
@@ -163,7 +267,7 @@ function CandidatesList() {
     let langMatch = 0;
     let skillsMatch = 0;
     let expMatch = 0;
-    let uniMatch = 100;
+    let uniMatch = 0;
     let overallMatch = 0;
     let wholeSkills = [];
     let wholeLanguages = [];
@@ -174,6 +278,12 @@ function CandidatesList() {
           skillsMatch += 100 / position.skills.length;
         }
       });
+    });
+
+    topUnis.map((topUni) => {
+        if (topUni === candidate.university) {
+          uniMatch += 100
+        }
     });
     position.languages.map((language) => {
       candidate.languages.map((cLanguage) => {
@@ -342,7 +452,7 @@ function CandidatesList() {
       setTeamWeight((previousState) => {
         return { ...previousState, uni: event.target.value };
       });
-    }else{
+    } else {
       setTeamWeight((previousState) => {
         return { ...previousState, uni: 1 };
       });
@@ -354,7 +464,7 @@ function CandidatesList() {
       setTeamWeight((previousState) => {
         return { ...previousState, exp: event.target.value };
       });
-    }else{
+    } else {
       setTeamWeight((previousState) => {
         return { ...previousState, exp: 1 };
       });
@@ -365,7 +475,7 @@ function CandidatesList() {
       setTeamWeight((previousState) => {
         return { ...previousState, skills: event.target.value };
       });
-    }else{
+    } else {
       setTeamWeight((previousState) => {
         return { ...previousState, skills: 1 };
       });
@@ -376,7 +486,7 @@ function CandidatesList() {
       setTeamWeight((previousState) => {
         return { ...previousState, lang: event.target.value };
       });
-    }else{
+    } else {
       setTeamWeight((previousState) => {
         return { ...previousState, lang: 1 };
       });
@@ -388,7 +498,7 @@ function CandidatesList() {
       setweight((previousState) => {
         return { ...previousState, uni: event.target.value };
       });
-    }else{
+    } else {
       setweight((previousState) => {
         return { ...previousState, uni: 1 };
       });
@@ -400,7 +510,7 @@ function CandidatesList() {
       setweight((previousState) => {
         return { ...previousState, exp: event.target.value };
       });
-    }else{
+    } else {
       setweight((previousState) => {
         return { ...previousState, exp: 1 };
       });
@@ -411,7 +521,7 @@ function CandidatesList() {
       setweight((previousState) => {
         return { ...previousState, skills: event.target.value };
       });
-    }else{
+    } else {
       setweight((previousState) => {
         return { ...previousState, skills: 1 };
       });
@@ -422,13 +532,116 @@ function CandidatesList() {
       setweight((previousState) => {
         return { ...previousState, lang: event.target.value };
       });
-    }else{
+    } else {
       setweight((previousState) => {
         return { ...previousState, lang: 1 };
       });
     }
   };
+  const MyVerticallyCenteredModal = (props)=>{
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidate's info
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table striped bordered hover>
+          <thead>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Name</td>
+              <td>{selectedCandidate.candidateName}</td>
+            </tr>{" "}
+            <tr>
+              <td>Candidate Score</td>
+              <td>{selectedCandidate.overallScore}%</td>
 
+            </tr>{" "}
+            <tr>
+              <td>Work Experience</td>
+              <td>{selectedCandidate.experienceYears} years</td>
+            </tr>
+            <tr>
+              <td>Skills Match</td>
+              <td>{selectedCandidate.skillsMatch}%</td>
+
+            </tr>{" "}
+            <tr>
+              <td>Skills</td>
+              <td>
+              {Object.keys(selectedCandidate).length !== 0 && selectedCandidate.skills.map((skill, index) => {
+                    let badgeColor = position.skills.indexOf(skill) !== -1 ? "success" : "primary"
+                    return (
+                      <Badge key={index} className="mx-1" pill bg={badgeColor}>
+                        {skill}
+                      </Badge>
+                    );
+                  })}
+              </td>
+
+            </tr>{" "}
+            {/* <tr>
+              <td>Experience</td>
+              <td>{selectedCandidate.experienceYears}</td>
+            </tr> */}
+            <tr>
+              <td>University</td>
+              <td>{selectedCandidate.university}</td>
+            </tr>
+
+
+            {/* <tr>
+              <td>Location</td>
+              <td>{selectedCandidate.location}</td>
+            </tr> */}
+            
+            <tr>
+              <td>Field</td>
+              <td>{selectedCandidate.field}</td>
+
+            </tr>{" "}
+            <tr>
+              <td>Role</td>
+              <td>{selectedCandidate.positionTitle}</td>
+            </tr>
+            <tr>
+              <td>Languages</td>
+              <td>
+              {Object.keys(selectedCandidate).length !== 0 && selectedCandidate.languages.map((language, index) => {
+                    return (
+                      <Badge key={index} className="mx-1" pill bg="primary">
+                        {language}
+                      </Badge>
+                    );
+                  })}
+
+              </td>
+
+            </tr>
+          </tbody>
+        </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  }
+
+  const prepareModal =(candidate)=>{
+    setSelectedCandidate(candidate)
+    if(selectedCandidate){
+      setModalShow(true)
+    }
+  }
   return (
     <>
       <Stack direction="horizontal" className="p-3" gap={3}>
@@ -441,7 +654,9 @@ function CandidatesList() {
           onClick={doComparison}
           disabled={comparisonList.length === 2 ? false : true}
         >
-          {comparisonList.length === 2 ? "Compare" : "Add candidates to compare"}
+          {comparisonList.length === 2
+            ? "Compare"
+            : "Add candidates to compare"}
         </Button>{" "}
       </Stack>
       <Table striped bordered hover>
@@ -450,7 +665,7 @@ function CandidatesList() {
             <th>#</th>
             <th>Name</th>
             <th>
-              University Match{" "}
+              Top University Match{" "}
               <input
                 type="text"
                 placeholder="Weight"
@@ -468,7 +683,7 @@ function CandidatesList() {
               ></input>
             </th>
             <th>
-              Experience{" "}
+              Experience Match{" "}
               <input
                 type="text"
                 placeholder="Weight"
@@ -495,12 +710,21 @@ function CandidatesList() {
           {candidates.map((candidate, index) => {
             let refLink = `/profile?cId=${candidate.id}`;
             return (
-              <tr key={index+1}>
-                <td>{index+1}</td>
+              <tr key={index + 1}>
+                <td>{index + 1}</td>
                 <td>{candidate.candidateName}</td>
-                <td>{candidate.universityMatch}%</td>
-                <td>{candidate.languageMatch}%</td>
-                <td>{candidate.experienceMatch}%</td>
+                <td>
+                  {candidate.universityMatch}% <br />
+                  {candidate.university}
+                </td>
+                <td>
+                  {candidate.languageMatch}% <br />
+                  {candidate.languages.map((lang) => `${lang},`)}
+                </td>
+                <td>
+                  {candidate.experienceMatch}% <br />{" "}
+                  {candidate.experienceYears}years
+                </td>
                 {/* <td>
                   {candidate.skills.map((s, index) => {
                     return (
@@ -514,13 +738,14 @@ function CandidatesList() {
                 <td>{candidate.overallScore}%</td>
                 <td>
                   <Link to={refLink}>
-                    <Button variant="danger">Remove</Button>{" "}
+                    <Button variant="danger">add to deleted table</Button>{" "}
                   </Link>
                 </td>
                 <td>
-                  <Link to={refLink}>
-                    <Button variant="primary">Details</Button>{" "}
-                  </Link>
+                  {/* <Link to={refLink}>
+                    <Button variant="primary">Details Pop up</Button>{" "}
+                  </Link> */}
+                  <Button variant="primary" onClick={() => prepareModal(candidate)}>Details</Button>
                 </td>
                 <td>
                   <Button
@@ -537,7 +762,7 @@ function CandidatesList() {
           })}
         </tbody>
       </Table>
-      
+
       <h3>Team Comparison Results</h3>
       <Table striped bordered hover>
         <thead>
@@ -590,8 +815,8 @@ function CandidatesList() {
             //   teamComparison(candidate);
             // let refLink = `/profile?cId=${candidate.id}`;
             return (
-              <tr key={index+1}>
-                <td>{index+1}</td>
+              <tr key={index + 1}>
+                <td>{index + 1}</td>
                 <td>{candidate.name}</td>
                 <td>{candidate.uni}%</td>
                 <td>{candidate.experience}%</td>
@@ -626,6 +851,10 @@ function CandidatesList() {
           ></LanguagesBubbleChart>
         )}
       </Row>
+      <MyVerticallyCenteredModal
+        show={modalShow}
+        onHide={() => setModalShow(false)}
+      />
     </>
   );
 }
