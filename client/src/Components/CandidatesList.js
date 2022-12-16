@@ -308,6 +308,7 @@ function CandidatesList() {
       });
     });
 
+    // giving score based on the rank of the university
     topUnis.map((topUni) => {
       if (topUni === candidate.university) {
         uniMatch += 100;
@@ -646,8 +647,12 @@ function CandidatesList() {
                 <td>
                   {Object.keys(selectedCandidate).length !== 0 &&
                     selectedCandidate.languages.map((language, index) => {
+                      let badgeColor =
+                        position.languages.indexOf(language) !== -1
+                          ? "success"
+                          : "primary";
                       return (
-                        <Badge key={index} className="mx-1" pill bg="primary">
+                        <Badge key={index} className="mx-1" pill bg={badgeColor}>
                           {language}
                         </Badge>
                       );
@@ -758,7 +763,7 @@ function CandidatesList() {
               }}>
               Candidate Match</p>
             </th>
-            <th>Remove</th>
+            {/* <th>Remove</th> */}
             <th>Details</th>
             <th>Comparison</th>
           </tr>
@@ -793,11 +798,11 @@ function CandidatesList() {
                 </td> */}
                 <td>{candidate.skillsMatch}%</td>
                 <td>{candidate.overallScore}%</td>
-                <td>
+                {/* <td>
                   <Link to={refLink}>
                     <Button variant="danger">add to deleted table</Button>{" "}
                   </Link>
-                </td>
+                </td> */}
                 <td>
                   {/* <Link to={refLink}>
                     <Button variant="primary">Details Pop up</Button>{" "}

@@ -117,30 +117,14 @@ function Comparison() {
 
               <td>{newCandidates[1].info.candidateName}</td>
             </tr>{" "}
-            <tr>
-              <td>age</td>
-              <td>{newCandidates[0].info.age}</td>
 
-              <td>{newCandidates[1].info.age}</td>
-            </tr>{" "}
-            <tr>
-              <td>sex</td>
-              <td>{newCandidates[0].info.sex}</td>
-
-              <td>{newCandidates[1].info.sex}</td>
-            </tr>{" "}
             <tr>
               <td>Candidate Score</td>
               <td>{newCandidates[0].info.candidateScore}</td>
 
               <td>{newCandidates[1].info.candidateScore}</td>
             </tr>{" "}
-            <tr>
-              <td>HR Score</td>
-              <td>{newCandidates[0].info.hrScore}</td>
-
-              <td>{newCandidates[1].info.hrScore}</td>
-            </tr>{" "}
+            
             <tr>
               <td>Field</td>
               <td>{newCandidates[0].info.field}</td>
@@ -171,30 +155,25 @@ function Comparison() {
             </tr>{" "}
             <tr>
               <td>Experience</td>
-              <td>{newCandidates[0].info.experienceYears}</td>
+              <td>{newCandidates[0].info.experienceYears} years</td>
 
-              <td>{newCandidates[1].info.experienceYears}</td>
+              <td>{newCandidates[1].info.experienceYears} years</td>
             </tr>
             <tr>
               <td>Education</td>
 
-              <td>{newCandidates[0].education.universityName}</td>
+              <td>{newCandidates[0].info.university}</td>
               <td>
                 {uiniversities.includes(
-                  newCandidates[1].education.universityName
+                  newCandidates[1].info.university
                 ) ? (
-                  <h4>{newCandidates[1].education.universityName}</h4>
+                  <h4>{newCandidates[1].info.university}</h4>
                 ) : (
-                  newCandidates[1].education.universityName
+                  newCandidates[1].info.university
                 )}
               </td>
             </tr>
-            <tr>
-              <td>Work Experience</td>
-              <td>{newCandidates[0].info.work}</td>
-
-              <td>{newCandidates[1].info.work}</td>
-            </tr>
+            
             <tr>
               <td>Languages</td>
               <td>
@@ -217,12 +196,7 @@ function Comparison() {
                 })}
               </td>
             </tr>
-            <tr>
-              <td>Location</td>
-              <td>{newCandidates[0].info.location}</td>
-
-              <td>{newCandidates[1].info.location}</td>
-            </tr>
+           
             <tr>
               <td>Role</td>
               <td>{newCandidates[0].info.positionTitle}</td>
