@@ -199,7 +199,7 @@ function CandidatesList() {
     Object.keys(counts).forEach((count) => {
       tempSkills.push({ Name: count, Count: counts[count] });
     });
-
+    tempSkills.sort((a,b)=> b.Count - a.Count)
     setSkillsList(tempSkills);
     // console.log(skillsList);
   }, [teamMembers]);
@@ -895,7 +895,12 @@ function CandidatesList() {
             );
           })}
         </tbody>
-      </Table>
+      </Table>     
+       <Row>
+        {skillsList.length > 0 && (
+          <NewBarChart skillsList={skillsList}></NewBarChart>
+        )}
+      </Row>
       <Row>
         <Col>
           <Dounut skillsDetail={tempSkillDonut}></Dounut>
@@ -906,11 +911,7 @@ function CandidatesList() {
           <SkillsBubbleChart skillsList={skillsList}></SkillsBubbleChart>
         )}
       </Row>
-      <Row>
-        {skillsList.length > 0 && (
-          <NewBarChart skillsList={skillsList}></NewBarChart>
-        )}
-      </Row>
+
       <Row>
         {languagesList.length > 0 && (
           <LanguagesBubbleChart
