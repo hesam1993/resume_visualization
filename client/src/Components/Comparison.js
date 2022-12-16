@@ -131,16 +131,11 @@ function Comparison() {
             </tr>{" "}
             <tr>
               <td>Candidate Score</td>
-              <td>{newCandidates[0].info.candidateScore}</td>
+              <td>{newCandidates[0].info.overallScore}</td>
 
-              <td>{newCandidates[1].info.candidateScore}</td>
+              <td>{newCandidates[1].info.overallScore}</td>
             </tr>{" "}
-            <tr>
-              <td>HR Score</td>
-              <td>{newCandidates[0].info.hrScore}</td>
 
-              <td>{newCandidates[1].info.hrScore}</td>
-            </tr>{" "}
             <tr>
               <td>Field</td>
               <td>{newCandidates[0].info.field}</td>
@@ -171,9 +166,9 @@ function Comparison() {
             </tr>{" "}
             <tr>
               <td>Experience</td>
-              <td>{newCandidates[0].info.experienceYears}</td>
+              <td>{newCandidates[0].info.experienceYears} years</td>
 
-              <td>{newCandidates[1].info.experienceYears}</td>
+              <td>{newCandidates[1].info.experienceYears} years</td>
             </tr>
             <tr>
               <td>Education</td>
@@ -189,12 +184,7 @@ function Comparison() {
                 )}
               </td>
             </tr>
-            <tr>
-              <td>Work Experience</td>
-              <td>{newCandidates[0].info.work}</td>
-
-              <td>{newCandidates[1].info.work}</td>
-            </tr>
+            
             <tr>
               <td>Languages</td>
               <td>

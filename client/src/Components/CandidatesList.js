@@ -199,7 +199,7 @@ function CandidatesList() {
     Object.keys(counts).forEach((count) => {
       tempSkills.push({ Name: count, Count: counts[count] });
     });
-
+    tempSkills.sort((a, b) => b.Count - a.Count);
     setSkillsList(tempSkills);
     // console.log(skillsList);
   }, [teamMembers]);
@@ -646,8 +646,12 @@ function CandidatesList() {
                 <td>
                   {Object.keys(selectedCandidate).length !== 0 &&
                     selectedCandidate.languages.map((language, index) => {
+                      let badgeColor =
+                        position.languages.indexOf(language) !== -1
+                          ? "success"
+                          : "primary";
                       return (
-                        <Badge key={index} className="mx-1" pill bg="primary">
+                        <Badge key={index} className="mx-1" pill bg={badgeColor}>
                           {language}
                         </Badge>
                       );
@@ -758,7 +762,7 @@ function CandidatesList() {
               }}>
               Candidate Match</p>
             </th>
-            <th>Remove</th>
+            {/* <th>Remove</th> */}
             <th>Details</th>
             <th>Comparison</th>
           </tr>
@@ -793,11 +797,11 @@ function CandidatesList() {
                 </td> */}
                 <td>{candidate.skillsMatch}%</td>
                 <td>{candidate.overallScore}%</td>
-                <td>
+                {/* <td>
                   <Link to={refLink}>
                     <Button variant="danger">add to deleted table</Button>{" "}
                   </Link>
-                </td>
+                </td> */}
                 <td>
                   {/* <Link to={refLink}>
                     <Button variant="primary">Details Pop up</Button>{" "}
@@ -892,6 +896,11 @@ function CandidatesList() {
         </tbody>
       </Table>
       <Row>
+        {skillsList.length > 0 && (
+          <NewBarChart skillsList={skillsList}></NewBarChart>
+        )}
+      </Row>
+      <Row>
         <Col>
           <Dounut skillsDetail={tempSkillDonut}></Dounut>
         </Col>
@@ -901,11 +910,7 @@ function CandidatesList() {
           <SkillsBubbleChart skillsList={skillsList}></SkillsBubbleChart>
         )}
       </Row>
-      <Row>
-        {skillsList.length > 0 && (
-          <NewBarChart skillsList={skillsList}></NewBarChart>
-        )}
-      </Row>
+
       <Row>
         {languagesList.length > 0 && (
           <LanguagesBubbleChart
