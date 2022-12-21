@@ -12,8 +12,8 @@ import { Button, Stack, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 function CandidatesList() {
   let navigate = useNavigate();
-  const topUnis = [
-    "Massachusetts Institute of Technology (MIT) ",
+  const TtopUnis = [
+    "Massachusetts Institute of Technology (MIT)",
     "University of Oxford",
     "Stanford University",
     "University of Cambridge",
@@ -114,6 +114,412 @@ function CandidatesList() {
     "University of Science and Technology of China",
     "Technical University of Denmark",
   ];
+
+  const topUnis = [
+    "Massachusetts Institute of Technology (MIT)",
+    "University of Oxford",
+    "Stanford University",
+    "University of Cambridge",
+    "Harvard University",
+    "California Institute of Technology (Caltech)",
+    "Imperial College London",
+    "ETH Zurich - Swiss Federal Institute of Technology",
+    "UCL",
+    "University of Chicago",
+    "National University of Singapore (NUS)",
+    "Nanyang Technological University, Singapore (NTU)",
+    "University of Pennsylvania",
+    "EPFL",
+    "Yale University",
+    "The University of Edinburgh",
+    "Tsinghua University",
+    "Peking University",
+    "Columbia University",
+    "Princeton University",
+    "Cornell University",
+    "The University of Hong Kong",
+    "The University of Tokyo",
+    "University of Michigan-Ann Arbor",
+    "Johns Hopkins University",
+    "University of Toronto",
+    "McGill University",
+    "The Australian National University",
+    "The University of Manchester",
+    "Northwestern University",
+    "Fudan University",
+    "University of California, Berkeley (UCB)",
+    "Kyoto University",
+    "The Hong Kong University of Science and Technology",
+    "King's College London",
+    "Seoul National University",
+    "The University of Melbourne",
+    "The University of Sydney",
+    "The Chinese University of Hong Kong (CUHK)",
+    "University of California, Los Angeles (UCLA)",
+    "KAIST - Korea Advanced Institute of Science & Technology",
+    "New York University (NYU)",
+    "The University of New South Wales (UNSW Sydney)",
+    "Université PSL",
+    "Zhejiang University",
+    "University of British Columbia",
+    "The University of Queensland",
+    "University of California, San Diego (UCSD)",
+    "Institut Polytechnique de Paris",
+    "The London School of Economics and Political Science (LSE)",
+    "Shanghai Jiao Tong University",
+    "Technical University of Munich",
+    "Duke University",
+    "Carnegie Mellon University",
+    "City University of Hong Kong",
+    "University of Amsterdam",
+    "Tokyo Institute of Technology (Tokyo Tech)",
+    "Delft University of Technology",
+    "Monash University",
+    "Brown University",
+    "The University of Warwick",
+    "University of Bristol",
+    "Ruprecht-Karls-Universität Heidelberg",
+    "Ludwig-Maximilians-Universität München",
+    "Universiti Malaya (UM)",
+    "The Hong Kong Polytechnic University",
+    "University of Texas at Austin",
+    "National Taiwan University (NTU)",
+    "Universidad de Buenos Aires (UBA)",
+    "KU Leuven",
+    "University of Zurich",
+    "Sorbonne University",
+    "University of Glasgow",
+    "Korea University",
+    "Osaka University",
+    "University of Wisconsin-Madison",
+    "University of Southampton",
+    "Lomonosov Moscow State University",
+    "University of Copenhagen",
+    "Yonsei University",
+    "Pohang University of Science And Technology (POSTECH)",
+    "Durham University",
+    "Tohoku University",
+    "University of Illinois at Urbana-Champaign",
+    "The University of Auckland",
+    "University of Washington",
+    "Université Paris-Saclay",
+    "Lund University",
+    "Georgia Institute of Technology",
+    "KTH Royal Institute of Technology",
+    "University of Birmingham",
+    "University of St Andrews",
+    "University of Leeds",
+    "The University of Western Australia",
+    "Rice University",
+    "The University of Sheffield",
+    "Pennsylvania State University",
+    "Sungkyunkwan University(SKKU)",
+    "University of Science and Technology of China",
+    "Technical University of Denmark",
+    ,
+    "University of North Carolina, Chapel Hill",
+    "Trinity College Dublin, The University of Dublin",
+    "University of Oslo",
+    "University of Nottingham",
+    "University of Helsinki",
+    "Universidad Nacional Autónoma de México  (UNAM)",
+    "University of Geneva",
+    "Washington University in St. Louis",
+    "The University of Adelaide",
+    "University of California, Davis",
+    "King Abdulaziz University (KAU)",
+    "Utrecht University",
+    "Université de Montréal",
+    "Aalto University",
+    "Boston University",
+    "Leiden University",
+    "University of Southern California",
+    "Purdue University",
+    "Queen Mary University of London",
+    "Nagoya University",
+    "University of Bern",
+    "The Ohio State University",
+    "Chalmers University of Technology",
+    "Universidade de São Paulo",
+    "Wageningen University & Research",
+    "Uppsala University",
+    "Eindhoven University of Technology",
+    "University of Alberta",
+    "Freie Universitaet Berlin",
+    "Humboldt-Universität zu Berlin",
+    "University of Groningen",
+    "École Normale Supérieure de Lyon",
+    "Nanjing University",
+    "Lancaster University",
+    "University of Technology Sydney",
+    "Newcastle University",
+    "Pontificia Universidad Católica de Chile (UC)",
+    "KIT, Karlsruhe Institute of Technology",
+    "Kyushu University",
+    "University of Basel",
+    "McMaster University",
+    "Ghent University",
+    "Politecnico di Milano",
+    "Universiti Putra Malaysia (UPM)",
+    "Universiti Kebangsaan Malaysia (UKM)",
+    "Hokkaido University",
+    "University of California, Santa Barbara (UCSB)",
+    "Universiti Sains Malaysia (USM)",
+    "Stockholm University",
+    "The University of Exeter",
+    "University of Waterloo",
+    "Cardiff University",
+    "University of Vienna",
+    "University of York",
+    "University of Rochester",
+    "Aarhus University",
+    "Hanyang University",
+    "Michigan State University",
+    "University of Maryland, College Park",
+    "Technische Universität Berlin (TU Berlin)",
+    "Emory University",
+    "Case Western Reserve University",
+    "Tecnológico de Monterrey",
+    "King Fahd University of Petroleum & Minerals",
+    "University of Pittsburgh",
+    "RWTH Aachen University",
+    "Alma Mater Studiorum - University of Bologna",
+    "University of Bath",
+    "Texas A&M University",
+    "Universitat de Barcelona",
+    "Western University",
+    "Sapienza University of Rome",
+    "Albert-Ludwigs-Universitaet Freiburg",
+    "University College Dublin",
+    "University of Florida",
+    "Al-Farabi Kazakh National University",
+    "University of Lausanne",
+    "Eberhard Karls Universität Tübingen",
+    "Indian Institute of Technology Bombay (IITB)",
+    "Erasmus University Rotterdam",
+    "National Tsing Hua University",
+    "Technische Universität Wien",
+    "University of Gothenburg",
+    "Khalifa University of Science and Technology",
+    "Universidad de Chile",
+    "Indian Institute of Technology Delhi (IITD)",
+    "Indian Institute of Science",
+    "University of Minnesota Twin Cities",
+    "Université catholique de Louvain (UCLouvain)",
+    "University of Liverpool",
+    "University of Twente",
+    "Dartmouth College",
+    "Universiti Teknologi Malaysia",
+    "University of Wollongong",
+    "Curtin University",
+    "Technische Universität Dresden",
+    "University of Otago",
+    "The University of Newcastle, Australia (UON)",
+    "The Hebrew University of Jerusalem",
+    "University of Bergen",
+    ,
+    "Macquarie University",
+    "Keio University",
+    "University of Reading",
+    "Waseda University",
+    "University of Göttingen",
+    "University of Aberdeen",
+    "RMIT University",
+    "Universidad Autónoma de Madrid",
+    "Universite libre de Bruxelles",
+    "Universitat Autònoma de Barcelona",
+    "Vrije Universiteit Amsterdam",
+    "Tongji University",
+    "Ulsan National Institute of Science and Technology (UNIST)",
+    "Queensland University of Technology (QUT)",
+    "Universität Hamburg",
+    "Chulalongkorn University",
+    "Arizona State University",
+    "Queen's University Belfast",
+    "Vanderbilt University",
+    "Universidade Estadual de Campinas (Unicamp)",
+    "Radboud University",
+    "Vrije Universiteit Brussel (VUB)",
+    "University of Notre Dame",
+    "Complutense University of Madrid",
+    "Qatar University",
+    "Wuhan University",
+    "Rheinische Friedrich-Wilhelms-Universität Bonn",
+    "University of Cape Town",
+    "University of Sussex",
+    "University of Virginia",
+    "University of Ottawa",
+    "Loughborough University",
+    "University of California, Irvine",
+    "Maastricht University",
+    "University of Antwerp",
+    "University of Calgary",
+    "Harbin Institute of Technology",
+    "Universidad de los Andes",
+    "University of Leicester",
+    "Victoria University of Wellington",
+    "Queen's University at Kingston",
+    "USI - Università della Svizzera italiana",
+    "American University of Beirut (AUB)",
+    "Saint Petersburg State University",
+    "Università di Padova",
+    "Ecole des Ponts ParisTech",
+    "Novosibirsk State University",
+    "University of Massachusetts Amherst",
+    "Georgetown University",
+    "Universitat Pompeu Fabra (Barcelona)",
+    "Universiti Brunei Darussalam (UBD)",
+    "University of Colorado Boulder",
+    "National Cheng Kung University (NCKU)",
+    "Yeshiva University",
+    "Gadjah Mada University",
+    "Indian Institute of Technology Madras (IITM)",
+    "Mahidol University",
+    "Tel Aviv University",
+    "National University of Ireland Galway",
+    "Universidad Nacional de Colombia",
+    "University of Canterbury | Te Whare Wānanga o Waitaha",
+    "Sun Yat-sen University",
+    "Sciences Po",
+    "Université de Paris",
+    "Kyung Hee University",
+    "Rutgers University–New Brunswick",
+    "Charles University",
+    "University of Navarra",
+    "National Yang Ming Chiao Tung University",
+    "The University of Arizona",
+    "Technical University of Darmstadt",
+    "Beijing Normal University",
+    "Heriot-Watt University",
+    "Dalhousie University",
+    "Tomsk State University",
+    "University of Surrey",
+    "Southern University of Science and Technology",
+    "Tufts University",
+    "Graz University of Technology",
+    "Indian Institute of Technology Kanpur (IITK)",
+    "King Saud University",
+    "Indian Institute of Technology Kharagpur (IIT-KGP)",
+    "Bauman Moscow State Technical University",
+    "Universität Innsbruck",
+    "Deakin University",
+    "Massey University",
+    "University of Illinois at Chicago (UIC)",
+    "University of Tsukuba",
+    "Hong Kong Baptist University",
+    "United Arab Emirates University",
+    "Griffith University",
+    "Moscow Institute of Physics and Technology (MIPT / Moscow Phystech)",
+    "Universitas Indonesia",
+    "Université Paris 1 Panthéon-Sorbonne",
+    "Xi’an Jiaotong University",
+    "Belarusian State University",
+    "University of Porto",
+    "University of Turku",
+    "Simon Fraser University",
+    "University College Cork",
+    "North Carolina State University",
+    "University of Tartu",
+    "University of Strathclyde",
+    "Bandung Institute of Technology (ITB)",
+    "University of Tasmania",
+    "Gwangju Institute of Science and Technology (GIST)",
+    "HSE University",
+    "University of East Anglia (UEA)",
+    "University of Warsaw",
+    "Jagiellonian University",
+    "University of Southern Denmark (SDU)",
+    "Indiana University Bloomington",
+    "University of Cologne",
+    "University of Miami",
+    "National Taiwan University of Science and Technology (Taiwan Tech)",
+    "Université Grenoble Alpes",
+    "University of Milan",
+    "IE University",
+    "RUDN University",
+    "National Research Nuclear University MEPhI (Moscow Engineering Physics Institute)",
+    "Universitat Politècnica de Catalunya · BarcelonaTech (UPC)",
+    "Swinburne University of Technology",
+    "University of Dundee",
+    "Friedrich-Alexander-Universität Erlangen-Nürnberg",
+    "Pontificia Universidad Católica Argentina",
+    "University of Macau",
+    "Aalborg University",
+    "University of South Australia",
+    "L.N. Gumilyov Eurasian National University (ENU)",
+    "Linköping University",
+    "City, University of London",
+    "Technion - Israel Institute of Technology",
+    "Birkbeck, University of London",
+    "Taylor's University",
+    "Huazhong University of Science and Technology",
+    "National Taiwan Normal University",
+    "Politecnico di Torino",
+    "Royal Holloway University of London",
+    "Tianjin University",
+    "University of Victoria (UVic)",
+    "Goethe-University Frankfurt am Main",
+    "University of Hawaiʻi at Mānoa",
+    "Northeastern University",
+    "Hiroshima University",
+    "Universität Jena",
+    "Universiti Teknologi Brunei",
+    "Virginia Polytechnic Institute and State University",
+    "Kazan (Volga region) Federal University",
+    "UCSI University",
+    "Universität Stuttgart",
+    "University of California, Santa Cruz",
+    "Brunel University London",
+    "Universidad Carlos III de Madrid (UC3M)",
+    "Ural Federal University - UrFU",
+    "Johannes Kepler University Linz",
+    "George Washington University",
+    "Tilburg University",
+    "University of Lisbon",
+    "Nankai University",
+    "National University of Sciences And Technology (NUST) Islamabad",
+    "University of Jyväskylä",
+    "University of Utah",
+    "Ewha Womans University",
+    "La Trobe University",
+    "MGIMO University",
+    "ITMO University",
+    "Umea University",
+    "University Ulm",
+    "Sultan Qaboos University",
+    "Norwegian University of Science And Technology",
+    "Universidade Federal do Rio de Janeiro",
+    "Universitat Politècnica de València",
+    "Lincoln University",
+    "Beijing Institute of Technology",
+    "University of Chemistry and Technology, Prague",
+    "University of Connecticut",
+    "University of Waikato",
+    "University of Oulu",
+    "Julius-Maximilians-Universität Würzburg",
+    "Quaid-i-Azam University",
+    "Stony Brook University, State University of New York",
+    "Sharif University of Technology",
+    "Tokyo Medical and Dental University (TMDU)",
+    "American University of Sharjah",
+    "Beihang University (former BUAA)",
+    "University of Kent",
+    "Kobe University",
+    "University of Kansas",
+    "University at Buffalo SUNY",
+    "University of Pisa",
+    "Università Vita-Salute San Raffaele",
+    "SOAS University of London",
+    "Universidad de Palermo (UP)",
+    "Peter the Great St. Petersburg Polytechnic University",
+    "Ruhr-Universität Bochum",
+    "Indian Institute of Technology Guwahati (IITG)",
+    "National Research Tomsk Polytechnic University",
+    "Pontificia Universidad Católica del Perú",
+    "Pakistan Institute of Engineering and Applied Sciences (PIEAS)",
+    "University of the Philippines",
+  ];
+
   let tempSkillDonut = [];
   const [weight, setweight] = useState({ uni: 1, exp: 1, skills: 1, lang: 1 });
   const [teamWeight, setTeamWeight] = useState({
@@ -199,7 +605,7 @@ function CandidatesList() {
     Object.keys(counts).forEach((count) => {
       tempSkills.push({ Name: count, Count: counts[count] });
     });
-    tempSkills.sort((a,b)=> b.Count - a.Count)
+    tempSkills.sort((a, b) => b.Count - a.Count);
     setSkillsList(tempSkills);
     // console.log(skillsList);
   }, [teamMembers]);
@@ -295,7 +701,7 @@ function CandidatesList() {
     let langMatch = 0;
     let skillsMatch = 0;
     let expMatch = 0;
-    let uniMatch = 0;
+    let uniMatch = 20;
     let overallMatch = 0;
     let wholeSkills = [];
     let wholeLanguages = [];
@@ -307,13 +713,44 @@ function CandidatesList() {
         }
       });
     });
-
+    console.log(uniMatch);
     // giving score based on the rank of the university
-    topUnis.map((topUni) => {
+    topUnis.map((topUni, index) => {
       if (topUni === candidate.university) {
-        uniMatch += 100;
+        console.log(`it is top UNI ${uniMatch}`);
+        console.log(index);
+        switch (true) {
+          case index < 50:
+            uniMatch += 80;
+            break;
+          case index < 100:
+            uniMatch += 70;
+            break;
+          case index < 150:
+            uniMatch += 60;
+            break;
+          case index < 200:
+            uniMatch += 50;
+            break;
+          case index < 250:
+            uniMatch += 40;
+            break;
+          case index < 300:
+            uniMatch += 30;
+            break;
+          case index < 350:
+            uniMatch += 20;
+            break;
+          case index < 400:
+            uniMatch += 10;
+            break;
+          default:
+            uniMatch += 20;
+            break;
+        }
       }
     });
+    console.log(uniMatch);
     position.languages.map((language) => {
       candidate.languages.map((cLanguage) => {
         if (language === cLanguage) {
@@ -652,7 +1089,12 @@ function CandidatesList() {
                           ? "success"
                           : "primary";
                       return (
-                        <Badge key={index} className="mx-1" pill bg={badgeColor}>
+                        <Badge
+                          key={index}
+                          className="mx-1"
+                          pill
+                          bg={badgeColor}
+                        >
                           {language}
                         </Badge>
                       );
@@ -697,13 +1139,15 @@ function CandidatesList() {
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th
-            >
+            <th>
               <p
-            style={{cursor:"pointer"}}
-              onClick={() => {
-                sortCandidates("universityMatch");
-              }}>Top University Match</p>{" "}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  sortCandidates("universityMatch");
+                }}
+              >
+                Top University Match
+              </p>{" "}
               <input
                 type="text"
                 placeholder="Weight"
@@ -711,13 +1155,15 @@ function CandidatesList() {
                 onChange={weightInputsUni}
               ></input>
             </th>
-            <th
-            >
+            <th>
               <p
-            style={{cursor:"pointer"}}
-              onClick={() => {
-                sortCandidates("languageMatch");
-              }}>Languages Match</p>{" "}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  sortCandidates("languageMatch");
+                }}
+              >
+                Languages Match
+              </p>{" "}
               <input
                 type="text"
                 placeholder="Weight"
@@ -725,28 +1171,31 @@ function CandidatesList() {
                 onChange={weightInputsLang}
               ></input>
             </th>
-            <th
-            >
-              <p 
-            style={{cursor:"pointer"}}
-              onClick={() => {
-                sortCandidates("experienceMatch");
-              }}>Experience Match</p>{" "}
+            <th>
+              <p
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  sortCandidates("experienceMatch");
+                }}
+              >
+                Experience Match
+              </p>{" "}
               <input
-            
                 type="text"
                 placeholder="Weight"
                 name="expWeight"
                 onChange={weightInputsExp}
               ></input>
             </th>
-            <th
-            
-            >
-              <p style={{cursor:"pointer"}}
-              onClick={() => {
-                sortCandidates("skillsMatch");
-              }}>Skills Match</p>{" "}
+            <th>
+              <p
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  sortCandidates("skillsMatch");
+                }}
+              >
+                Skills Match
+              </p>{" "}
               <input
                 type="text"
                 placeholder="Weight"
@@ -754,14 +1203,15 @@ function CandidatesList() {
                 onChange={weightInputsSkills}
               ></input>
             </th>
-            <th
-            
-            >
-              <p style={{cursor:"pointer"}}
-              onClick={() => {
-                sortCandidates("overallScore");
-              }}>
-              Candidate Match</p>
+            <th>
+              <p
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  sortCandidates("overallScore");
+                }}
+              >
+                Candidate Match
+              </p>
             </th>
             {/* <th>Remove</th> */}
             <th>Details</th>
@@ -895,8 +1345,8 @@ function CandidatesList() {
             );
           })}
         </tbody>
-      </Table>     
-       <Row>
+      </Table>
+      <Row>
         {skillsList.length > 0 && (
           <NewBarChart skillsList={skillsList}></NewBarChart>
         )}
