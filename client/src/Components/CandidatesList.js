@@ -528,9 +528,11 @@ function CandidatesList() {
     skills: 1,
     lang: 1,
   });
+  const [compareList, setCompareList] = useState([]);
   const [candidates, setCandidates] = useState([]);
   const [selectedCandidate, setSelectedCandidate] = useState({});
   const [modalShow, setModalShow] = useState(false);
+  const [compareModal, setCompareModal] = useState(false);
   const [secondCandidates, setSecondCandidates] = useState([]);
   const [position, setPosition] = useState([]);
   const [skillsList, setSkillsList] = useState([]);
@@ -545,6 +547,7 @@ function CandidatesList() {
   useEffect(() => {
     API.getApplication(positionId)
       .then((candidatesInfo) => {
+        console.log(candidatesInfo);
         setCandidates(candidatesInfo);
         // console.log(`it is candidates data : ${candidates}`);
       })
@@ -685,14 +688,22 @@ function CandidatesList() {
       setComparisonList(newComparisonList);
     }
   };
+  const resetComparison = () => {
+    let newComparisonList = [...comparisonList];
+    newComparisonList = [];
+    setComparisonList(newComparisonList);
+  };
 
   // starting the comparison
   const doComparison = () => {
     const firstCandidate = comparisonList[0].candidateId;
     const secondCandidate = comparisonList[1].candidateId;
-    navigate(
-      `/comparison?fid=${firstCandidate}&sid=${secondCandidate}&pid=${positionId}`
-    );
+    const listOfCandidates = [firstCandidate, secondCandidate];
+    console.log(comparisonList);
+    setCompareModal(true);
+    // navigate(
+    //   `/comparison?fid=${firstCandidate}&sid=${secondCandidate}&pid=${positionId}`
+    // );
   };
 
   // compute each candidate score based on some factors
@@ -701,7 +712,7 @@ function CandidatesList() {
     let langMatch = 0;
     let skillsMatch = 0;
     let expMatch = 0;
-    let uniMatch = 20;
+    let uniMatch = 10;
     let overallMatch = 0;
     let wholeSkills = [];
     let wholeLanguages = [];
@@ -720,32 +731,32 @@ function CandidatesList() {
         console.log(`it is top UNI ${uniMatch}`);
         console.log(index);
         switch (true) {
-          case index < 50:
+          case index <= 50:
+            uniMatch += 90;
+            break;
+          case index <= 100:
             uniMatch += 80;
             break;
-          case index < 100:
+          case index <= 150:
             uniMatch += 70;
             break;
-          case index < 150:
+          case index <= 200:
             uniMatch += 60;
             break;
-          case index < 200:
+          case index <= 250:
             uniMatch += 50;
             break;
-          case index < 250:
+          case index <= 300:
             uniMatch += 40;
             break;
-          case index < 300:
+          case index <= 350:
             uniMatch += 30;
             break;
-          case index < 350:
+          case index <= 400:
             uniMatch += 20;
-            break;
-          case index < 400:
-            uniMatch += 10;
             break;
           default:
-            uniMatch += 20;
+            uniMatch += 0;
             break;
         }
       }
@@ -760,24 +771,24 @@ function CandidatesList() {
     });
     //based on the differenece between minExp and candidate exp years a score is added to the candidate
     const diffExp = position.minExp - candidate.experienceYears;
-    switch (diffExp) {
-      case 0:
+    switch (true) {
+      case diffExp == 0:
         expMatch += 80;
         break;
-      case -1:
+      case diffExp == -1:
         expMatch += 90;
         break;
-      case -2:
+      case diffExp <= -2:
         expMatch += 100;
         break;
-      case 1:
+      case diffExp == 1:
         expMatch += 60;
         break;
-      case diffExp > 1:
-        expMatch += 30;
+      case diffExp == 2:
+        expMatch += 40;
         break;
       default:
-        expMatch += 30;
+        expMatch += 10;
     }
 
     overallMatch += (uniMatch / 4) * weight.uni;
@@ -1004,6 +1015,15 @@ function CandidatesList() {
       });
     }
   };
+
+  const returnGitInfo = (githubId) => {
+    API.getGithubInfo(githubId)
+      .then((githubInfo) => {
+        return githubInfo.publicRepos;
+        // console.log(`it is candidates data : ${candidates}`);
+      })
+      .catch((err) => console.log(err));
+  };
   const MyVerticallyCenteredModal = (props) => {
     return (
       <Modal
@@ -1101,8 +1121,248 @@ function CandidatesList() {
                     })}
                 </td>
               </tr>
+              <tr>
+                <td>Github link</td>
+
+                <td>
+                  {selectedCandidate.githubId != null ? (
+                    <a
+                      href={`https://github.com/${selectedCandidate.githubId}`}
+                      target="blank"
+                    >
+                      {selectedCandidate.githubId}
+                    </a>
+                  ) : (
+                    `Not Provided`
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>MediumLink</td>
+                <td>
+                  {selectedCandidate.mediumId != null ? (
+                    <a
+                      href={`https://medium.com/${selectedCandidate.mediumId}`}
+                      target="blank"
+                    >
+                      {selectedCandidate.mediumId}
+                    </a>
+                  ) : (
+                    `Not Provided`
+                  )}
+                </td>
+              </tr>
             </tbody>
           </Table>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+  const CompareModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidate's info
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {comparisonList.length > 1 && (
+            <Table striped bordered hover>
+              <thead></thead>
+              <tbody>
+                <tr>
+                  <td>Name</td>
+                  <td>{comparisonList[0].candidateName}</td>
+                  <td>{comparisonList[1].candidateName}</td>
+                </tr>{" "}
+                <tr>
+                  <td>Candidate Score</td>
+                  <td>{comparisonList[0].overallScore}%</td>
+                  <td>{comparisonList[1].overallScore}%</td>
+                </tr>{" "}
+                <tr>
+                  <td>Work Experience</td>
+                  <td>{comparisonList[0].experienceYears} years</td>
+                  <td>{comparisonList[1].experienceYears} years</td>
+                </tr>
+                <tr>
+                  <td>Skills Match</td>
+                  <td>{comparisonList[0].skillsMatch}%</td>
+                  <td>{comparisonList[1].skillsMatch}%</td>
+                </tr>{" "}
+                <tr>
+                  <td>Skills</td>
+                  <td>
+                    {Object.keys(comparisonList[0]).length !== 0 &&
+                      comparisonList[0].skills.map((skill, index) => {
+                        let badgeColor =
+                          position.skills.indexOf(skill) !== -1
+                            ? "success"
+                            : "primary";
+                        return (
+                          <Badge
+                            key={index}
+                            className="mx-1"
+                            pill
+                            bg={badgeColor}
+                          >
+                            {skill}
+                          </Badge>
+                        );
+                      })}
+                  </td>
+                  <td>
+                    {Object.keys(comparisonList[1]).length !== 0 &&
+                      comparisonList[1].skills.map((skill, index) => {
+                        let badgeColor =
+                          position.skills.indexOf(skill) !== -1
+                            ? "success"
+                            : "primary";
+                        return (
+                          <Badge
+                            key={index}
+                            className="mx-1"
+                            pill
+                            bg={badgeColor}
+                          >
+                            {skill}
+                          </Badge>
+                        );
+                      })}
+                  </td>
+                </tr>{" "}
+                {/* <tr>
+                          <td>Experience</td>
+                          <td>{selectedCandidate.experienceYears}</td>
+                        </tr> */}
+                <tr>
+                  <td>University</td>
+                  <td>{comparisonList[0].university}</td>
+                  <td>{comparisonList[1].university}</td>
+                </tr>
+                {/* <tr>
+                          <td>Location</td>
+                          <td>{comparisonList[0].location}</td>
+                        </tr> */}
+                <tr>
+                  <td>Field</td>
+                  <td>{comparisonList[0].field}</td>
+                  <td>{comparisonList[1].field}</td>
+                </tr>{" "}
+                <tr>
+                  <td>Role</td>
+                  <td>{comparisonList[0].positionTitle}</td>
+                  <td>{comparisonList[1].positionTitle}</td>
+                </tr>
+                <tr>
+                  <td>Languages</td>
+                  <td>
+                    {Object.keys(comparisonList[0]).length !== 0 &&
+                      comparisonList[0].languages.map((language, index) => {
+                        let badgeColor =
+                          position.languages.indexOf(language) !== -1
+                            ? "success"
+                            : "primary";
+                        return (
+                          <Badge
+                            key={index}
+                            className="mx-1"
+                            pill
+                            bg={badgeColor}
+                          >
+                            {language}
+                          </Badge>
+                        );
+                      })}
+                  </td>
+                  <td>
+                    {Object.keys(comparisonList[1]).length !== 0 &&
+                      comparisonList[1].languages.map((language, index) => {
+                        let badgeColor =
+                          position.languages.indexOf(language) !== -1
+                            ? "success"
+                            : "primary";
+                        return (
+                          <Badge
+                            key={index}
+                            className="mx-1"
+                            pill
+                            bg={badgeColor}
+                          >
+                            {language}
+                          </Badge>
+                        );
+                      })}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Github link</td>
+
+                  <td>
+                    {comparisonList[0].githubId != null ? (
+                      <a
+                        href={`https://github.com/${comparisonList[0].githubId}`}
+                        target="blank"
+                      >
+                        {comparisonList[0].githubId}
+                      </a>
+                    ) : (
+                      `Not Provided`
+                    )}
+                  </td>
+                  <td>
+                    {comparisonList[1].githubId != null ? (
+                      <a
+                        href={`https://github.com/${comparisonList[1].githubId}`}
+                        target="blank"
+                      >
+                        {comparisonList[1].githubId}
+                      </a>
+                    ) : (
+                      `Not Provided`
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td>MediumLink</td>
+                  <td>
+                    {comparisonList[0].mediumId != null ? (
+                      <a
+                        href={`https://medium.com/${comparisonList[0].mediumId}`}
+                        target="blank"
+                      >
+                        {comparisonList[0].mediumId}
+                      </a>
+                    ) : (
+                      `Not Provided`
+                    )}
+                  </td>
+                  <td>
+                    {comparisonList[1].mediumId != null ? (
+                      <a
+                        href={`https://medium.com/${comparisonList[1].mediumId}`}
+                        target="blank"
+                      >
+                        {comparisonList[1].mediumId}
+                      </a>
+                    ) : (
+                      `Not Provided`
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </Table>
+          )}
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.onHide}>Close</Button>
@@ -1115,8 +1375,10 @@ function CandidatesList() {
     setSelectedCandidate(candidate);
     if (selectedCandidate) {
       setModalShow(true);
+      console.log(selectedCandidate);
     }
   };
+
   return (
     <>
       <Stack direction="horizontal" className="p-3" gap={3}>
@@ -1125,13 +1387,21 @@ function CandidatesList() {
         </h3>
         <Button
           variant="primary"
-          style={{ position: "absolute", right: "30px" }}
+          style={{ position: "absolute", right: "200px" }}
           onClick={doComparison}
           disabled={comparisonList.length === 2 ? false : true}
         >
           {comparisonList.length === 2
-            ? "Compare"
-            : "Add candidates to compare"}
+            ? "Compare candidates"
+            : "Add 2 candidates to compare"}
+        </Button>{" "}
+        <Button
+          variant="warning"
+          style={{ position: "absolute", right: "30px" }}
+          onClick={resetComparison}
+          disabled={comparisonList.length === 2 ? false : true}
+        >
+          Reset comparison
         </Button>{" "}
       </Stack>
       <Table striped bordered hover>
@@ -1373,6 +1643,7 @@ function CandidatesList() {
         show={modalShow}
         onHide={() => setModalShow(false)}
       />
+      <CompareModal show={compareModal} onHide={() => setCompareModal(false)} />
     </>
   );
 }

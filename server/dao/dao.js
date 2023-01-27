@@ -194,7 +194,7 @@ exports.getApplications = () => {
 exports.getApplication = (positionId) => {
   return new Promise((resolve, reject) => {
     const sql = `select applications.id,applications.hrScore,applications.positionId,
-    positions.title as 'positionTitle',candidates.fullName as 'candidateName',candidates.age,candidates.sex,candidates.university,
+    positions.title as 'positionTitle',candidates.fullName as 'candidateName',candidates.age,candidates.mediumId,candidates.githubId,candidates.sex,candidates.university,
 	  candidates.experienceYears,candidates.educationId,candidates.workId,candidates.languages,candidates.location,candidates.title as 'Candidate Role',
     fields.field,candidates.skills,candidates.id as 'candidateId' from applications
     JOIN positions on applications.positionId = positions.id JOIN candidates on applications.candidateId = candidates.id JOIN
@@ -223,7 +223,9 @@ exports.getApplication = (positionId) => {
             row.languages,
             row.location,
             row.candidateRole,
-            row.university
+            row.university,
+            row.githubId,
+            row.mediumId
           )
       );
       resolve(applications);
@@ -500,7 +502,9 @@ class ApplicationData {
     languages,
     location,
     candidateRole,
-    university
+    university,
+    githubId,
+    mediumId
   ) {
     this.id = id;
     this.candidateId = candidateId;
@@ -519,6 +523,8 @@ class ApplicationData {
     this.location = location;
     this.candidateRole = candidateRole;
     this.university = university;
+    this.githubId =githubId;
+    this.mediumId = mediumId
   }
 }
 class ApplicationsData {

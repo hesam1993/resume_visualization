@@ -13,6 +13,7 @@ function PositionsList(props) {
             <th>Title</th>
             <th>Description</th>
             <th>Field</th>
+            <th>Exp</th>
             <th>Required Skills</th>
             <th>Number of Applicants</th>
             <th>Status</th>
@@ -28,6 +29,7 @@ function PositionsList(props) {
                 <td>{p.title}</td>
                 <td>{p.description}</td>
                 <td>{p.field}</td>
+                <td>{p.minExp}</td>
                 <td>
                   {p.skills.map((s, index) => {
                     return (

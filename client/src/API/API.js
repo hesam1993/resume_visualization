@@ -105,7 +105,9 @@ async function getPositions() {
             a.languages,
             a.location,
             a.candidateRole,
-            a.university
+            a.university,
+            a.githubId,
+            a.mediumId
           )
       );
       return final;

@@ -143,7 +143,9 @@ class ApplicationData {
     languages,
     location,
     candidateRole,
-    university
+    university,
+    githubId,
+    mediumId
   ) {
     this.id = id;
     this.candidateId = candidateId;
@@ -162,6 +164,8 @@ class ApplicationData {
     this.location = location;
     this.candidateRole = candidateRole;
     this.university = university;
+    this.githubId = githubId;
+    this.mediumId = mediumId
   }
 
   /**
