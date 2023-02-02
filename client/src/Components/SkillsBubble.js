@@ -19,7 +19,7 @@ function SkillsBubbleChart(props) {
     var diameter = 900;
     var color = d3.scaleOrdinal(d3.schemeSet1);
 
-    var bubble = d3.pack(dataset).size([diameter*1.5, diameter]).padding(1.5);
+    var bubble = d3.pack(dataset).size([diameter*1.5, diameter]).padding(2);
 
     var svg = d3
       .select("#my_dataviz")
@@ -87,7 +87,6 @@ function SkillsBubbleChart(props) {
   };
   return (
     <>
-      <h2>Candidates Skills Chart</h2>
       <div id="my_dataviz"></div>
     </>
   );

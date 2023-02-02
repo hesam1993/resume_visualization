@@ -97,6 +97,21 @@ exports.getCandidate = (candidateId) => {
   });
 };
 
+exports.closePosition = (positionId) => {
+  console.log(positionId)
+  return new Promise((resolve, reject) => {
+    const sql = `update positions set status = 0 where id = ?`;
+    db.all(sql, [positionId], (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+
+      resolve(true);
+    });
+  });
+};
+
 exports.getPositions = () => {
   return new Promise((resolve, reject) => {
     const sql = `select positions.id,positions.title,
@@ -523,8 +538,8 @@ class ApplicationData {
     this.location = location;
     this.candidateRole = candidateRole;
     this.university = university;
-    this.githubId =githubId;
-    this.mediumId = mediumId
+    this.githubId = githubId;
+    this.mediumId = mediumId;
   }
 }
 class ApplicationsData {

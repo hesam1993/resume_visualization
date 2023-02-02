@@ -107,7 +107,6 @@ function Dounut(props) {
   };
   return (
     <>
-      <h2> Skills Match Chart</h2>
       <div id="barChart"></div>
     </>
   );

@@ -167,6 +167,17 @@ app.get("/api/applications", async (req, res) => {
     }
   });
 
+  app.put("/api/positions/:posId", async (req, res) => {
+    const posId = req.params.posId
+    try {
+      const result = await dao.closePosition(posId);
+      res.status(200).json({ result });
+    } catch (err) {
+      console.log(err);
+      res.status(400).end();
+    }
+  });
+
 app.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);
 });

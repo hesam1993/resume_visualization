@@ -1,8 +1,8 @@
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
-import API from "../API/API"
+import API from "../API/API";
 
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import PositionsList from "./PositionsList";
 
 function Home() {
@@ -11,14 +11,28 @@ function Home() {
   useEffect(() => {
     API.getPositions()
       .then((positionsInfo) => {
-        setPositions(positionsInfo)
-        console.log(positions)
-
+        setPositions(positionsInfo);
+        console.log(positions);
       })
       .catch((err) => console.log(err));
+  }, []);
 
-
-  },[]);
+  const closingPosition = (positionId) => {
+    console.log(positionId);
+    API.closePosition(positionId)
+      .then((result) => {
+        if (result) {
+          API.getPositions()
+            .then((positionsInfo) => {
+              setPositions(positionsInfo);
+              console.log(positions);
+            })
+            .catch((err) => console.log(err));
+        }
+        // console.log(`it is candidates data : ${candidates}`);
+      })
+      .catch((err) => console.log(err));
+  };
   // useEffect(() => {
   //   API.getApplications()
   //     .then((applicationsInfo) => {
@@ -32,7 +46,10 @@ function Home() {
     <>
       <Container fluid>
         <Row>
-          <PositionsList positions={positions}></PositionsList>
+          <PositionsList
+            positions={positions}
+            closingPosition={closingPosition}
+          ></PositionsList>
         </Row>
       </Container>
     </>

@@ -2,7 +2,10 @@ import Table from "react-bootstrap/Table";
 import Badge from "react-bootstrap/Badge";
 import { Link } from "react-router-dom";
 import Button from "react-bootstrap/Button";
+import API from "../API/API";
+
 function PositionsList(props) {
+
   return (
     <>
       <h3>List of all positions</h3>
@@ -47,6 +50,9 @@ function PositionsList(props) {
                     <Button variant="primary">Details</Button>{" "}
                   </Link>
                 </td>
+                {/* <td>
+                    <Button variant="danger" onClick={()=>props.closingPosition(p.id)}>Close this position</Button>{" "}
+                </td> */}
               </tr>
             );
           })}

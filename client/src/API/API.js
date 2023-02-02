@@ -273,6 +273,24 @@ async function getPositions() {
     }
   }
 
+  async function closePosition(positionId) {
+    var requestOptions = {
+      method: 'PUT',
+      redirect: 'follow'
+    };
+    let url = `${baseURL}/positions/${positionId}`;
+    const response = await fetch(url, requestOptions);
+    const resultJson = await response.json();
+    if (response.ok) {
+      return resultJson;
+    } else {
+      let err = { status: response.status, errObj: resultJson };
+      throw err; // An object with the error coming from the server
+    }
+  }
+
+  
+
   const API = {
     getPositions,
     getApplications,
@@ -283,6 +301,7 @@ async function getPositions() {
     getCandidate,
     getGithubInfo,
     getMediumInfo,
-    getTeamMembers
+    getTeamMembers,
+    closePosition
   };
   export default API;

@@ -530,6 +530,10 @@ function CandidatesList() {
   });
   const [compareList, setCompareList] = useState([]);
   const [candidates, setCandidates] = useState([]);
+  const [skillsModal, setSkillsModal] = useState(false);
+  const [skillsBubbleModal, setSkillsBubbleModal] = useState(false);
+  const [languageBubbleModal, setLanguageBubbleModal] = useState(false);
+  const [teamsDonutModal, setTeamsDonutModal] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState({});
   const [modalShow, setModalShow] = useState(false);
   const [compareModal, setCompareModal] = useState(false);
@@ -1379,6 +1383,107 @@ function CandidatesList() {
     }
   };
 
+  const SkillsChartModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        fullscreen={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidates Skills Chart
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {<NewBarChart skillsList={skillsList}></NewBarChart>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+  const TeamsDonutModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        fullscreen={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidates Skills Chart
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {<Dounut skillsDetail={tempSkillDonut}></Dounut>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+  const SkillsBubbleModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        fullscreen={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidates Skills Bubble Chart
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        {skillsList.length > 0 && (
+          <SkillsBubbleChart skillsList={skillsList}></SkillsBubbleChart>
+        )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+  const LanguageBubbleModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        fullscreen={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidates Languages Bubble Chart
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+        {languagesList.length > 0 && (
+          <LanguagesBubbleChart
+            languages={languagesList}
+          ></LanguagesBubbleChart>
+        )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
+
+
+
   return (
     <>
       <Stack direction="horizontal" className="p-3" gap={3}>
@@ -1403,6 +1508,7 @@ function CandidatesList() {
         >
           Reset comparison
         </Button>{" "}
+        
       </Stack>
       <Table striped bordered hover>
         <thead>
@@ -1616,34 +1722,51 @@ function CandidatesList() {
           })}
         </tbody>
       </Table>
-      <Row>
-        {skillsList.length > 0 && (
-          <NewBarChart skillsList={skillsList}></NewBarChart>
-        )}
-      </Row>
-      <Row>
-        <Col>
-          <Dounut skillsDetail={tempSkillDonut}></Dounut>
+      <Row className="m-5">
+      <Col><Button
+          variant="primary"
+          onClick={()=>setSkillsModal(true)}
+          
+        >
+          Show Teams Comparison Chart
+        </Button>{" "}
         </Col>
+        <Col><Button
+          variant="primary"
+          onClick={()=>setTeamsDonutModal(true)}
+          
+        >
+          Show Candidates Skills Chart
+        </Button>{" "}
+        </Col>        
+        <Col><Button
+          variant="primary"
+          onClick={()=>setSkillsBubbleModal(true)}
+          
+        >
+          Show Candidates Skills Bubble Chart
+        </Button>{" "}
+        </Col>
+        <Col><Button
+          variant="primary"
+          onClick={()=>setLanguageBubbleModal(true)}
+          
+        >
+          Show Candidates Skills Bubble Chart
+        </Button>{" "}
+        </Col>
+       
       </Row>
-      <Row>
-        {skillsList.length > 0 && (
-          <SkillsBubbleChart skillsList={skillsList}></SkillsBubbleChart>
-        )}
-      </Row>
-
-      <Row>
-        {languagesList.length > 0 && (
-          <LanguagesBubbleChart
-            languages={languagesList}
-          ></LanguagesBubbleChart>
-        )}
-      </Row>
+      
       <MyVerticallyCenteredModal
         show={modalShow}
         onHide={() => setModalShow(false)}
       />
       <CompareModal show={compareModal} onHide={() => setCompareModal(false)} />
+      <SkillsChartModal show={skillsModal} onHide={() => setSkillsModal(false)} />
+      <TeamsDonutModal show={teamsDonutModal} onHide={() => setTeamsDonutModal(false)} />
+      <SkillsBubbleModal show={skillsBubbleModal} onHide={() => setSkillsBubbleModal(false)} />
+      <LanguageBubbleModal show={languageBubbleModal} onHide={() => setLanguageBubbleModal(false)} />
     </>
   );
 }
