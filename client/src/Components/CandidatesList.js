@@ -10,6 +10,7 @@ import API from "../API/API";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Stack, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
+import ScatterPlot from "./ScatterPlot";
 function CandidatesList() {
   let navigate = useNavigate();
   const TtopUnis = [
@@ -534,6 +535,7 @@ function CandidatesList() {
   const [skillsBubbleModal, setSkillsBubbleModal] = useState(false);
   const [languageBubbleModal, setLanguageBubbleModal] = useState(false);
   const [teamsDonutModal, setTeamsDonutModal] = useState(false);
+  const [scatterModal, setScatterModal] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState({});
   const [modalShow, setModalShow] = useState(false);
   const [compareModal, setCompareModal] = useState(false);
@@ -551,7 +553,7 @@ function CandidatesList() {
   useEffect(() => {
     API.getApplication(positionId)
       .then((candidatesInfo) => {
-        console.log(candidatesInfo);
+        // console.log(candidatesInfo);
         setCandidates(candidatesInfo);
         // console.log(`it is candidates data : ${candidates}`);
       })
@@ -589,8 +591,8 @@ function CandidatesList() {
         overall: overallMatch,
       });
     });
-    console.log(`it is FIRST`);
-    console.log(comparisonedCand);
+    // console.log(`it is FIRST`);
+    // console.log(comparisonedCand);
 
     comparisonedCand.sort((a, b) => b.overall - a.overall);
     setSecondCandidates(comparisonedCand);
@@ -655,7 +657,7 @@ function CandidatesList() {
 
     tempCandidates.sort((a, b) => b.overallScore - a.overallScore);
     setCandidates(tempCandidates);
-    console.log(tempCandidates);
+    // console.log(tempCandidates);
   }, [position, weight]);
 
   const sortCandidates = (sortFactor) => {
@@ -680,7 +682,7 @@ function CandidatesList() {
         comparisonedCand.sort((a, b) => b.overallScore - a.overallScore);
         break;
     }
-    console.log(comparisonedCand);
+    // console.log(comparisonedCand);
     setCandidates(comparisonedCand);
   };
 
@@ -703,7 +705,7 @@ function CandidatesList() {
     const firstCandidate = comparisonList[0].candidateId;
     const secondCandidate = comparisonList[1].candidateId;
     const listOfCandidates = [firstCandidate, secondCandidate];
-    console.log(comparisonList);
+    // console.log(comparisonList);
     setCompareModal(true);
     // navigate(
     //   `/comparison?fid=${firstCandidate}&sid=${secondCandidate}&pid=${positionId}`
@@ -712,7 +714,7 @@ function CandidatesList() {
 
   // compute each candidate score based on some factors
   const candidateScoring = (candidate, index) => {
-    console.log(candidate.candidateId);
+    // console.log(candidate.candidateId);
     let langMatch = 0;
     let skillsMatch = 0;
     let expMatch = 0;
@@ -728,12 +730,12 @@ function CandidatesList() {
         }
       });
     });
-    console.log(uniMatch);
+    // console.log(uniMatch);
     // giving score based on the rank of the university
     topUnis.map((topUni, index) => {
       if (topUni === candidate.university) {
-        console.log(`it is top UNI ${uniMatch}`);
-        console.log(index);
+        // console.log(`it is top UNI ${uniMatch}`);
+        // console.log(index);
         switch (true) {
           case index <= 50:
             uniMatch += 90;
@@ -765,7 +767,7 @@ function CandidatesList() {
         }
       }
     });
-    console.log(uniMatch);
+    // console.log(uniMatch);
     position.languages.map((language) => {
       candidate.languages.map((cLanguage) => {
         if (language === cLanguage) {
@@ -808,13 +810,13 @@ function CandidatesList() {
         parseInt(weight.lang)) /
         4);
 
-    console.log(
-      parseInt(uniMatch),
-      parseInt(expMatch),
-      parseInt(skillsMatch),
-      parseInt(langMatch),
-      Math.ceil(overallMatch)
-    );
+    // console.log(
+    //   parseInt(uniMatch),
+    //   parseInt(expMatch),
+    //   parseInt(skillsMatch),
+    //   parseInt(langMatch),
+    //   Math.ceil(overallMatch)
+    // );
     // overallMatch =
     //   overallMatch /
     //   ((parseInt(weight.uni) +
@@ -1379,7 +1381,7 @@ function CandidatesList() {
     setSelectedCandidate(candidate);
     if (selectedCandidate) {
       setModalShow(true);
-      console.log(selectedCandidate);
+      // console.log(selectedCandidate);
     }
   };
 
@@ -1417,11 +1419,11 @@ function CandidatesList() {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Candidates Skills Chart
+            Candidates to team members comparison match
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            {<Dounut skillsDetail={tempSkillDonut}></Dounut>}
+            {<Dounut candidatesResult={secondCandidates}></Dounut>}
         </Modal.Body>
         <Modal.Footer>
           <Button onClick={props.onHide}>Close</Button>
@@ -1481,7 +1483,29 @@ function CandidatesList() {
       </Modal>
     );
   };
-
+  const ScatterModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        fullscreen={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidates Experience years / Overall Score Scatter Plot
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {<ScatterPlot candidates={candidates}></ScatterPlot>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
 
 
   return (
@@ -1727,8 +1751,8 @@ function CandidatesList() {
           variant="primary"
           onClick={()=>setSkillsModal(true)}
           
-        >
-          Show Teams Comparison Chart
+        > Candidates Skills Chart
+          
         </Button>{" "}
         </Col>
         <Col><Button
@@ -1736,7 +1760,7 @@ function CandidatesList() {
           onClick={()=>setTeamsDonutModal(true)}
           
         >
-          Show Candidates Skills Chart
+           Teams Comparison Chart
         </Button>{" "}
         </Col>        
         <Col><Button
@@ -1744,7 +1768,7 @@ function CandidatesList() {
           onClick={()=>setSkillsBubbleModal(true)}
           
         >
-          Show Candidates Skills Bubble Chart
+           Candidates Skills Bubble Chart
         </Button>{" "}
         </Col>
         <Col><Button
@@ -1752,10 +1776,17 @@ function CandidatesList() {
           onClick={()=>setLanguageBubbleModal(true)}
           
         >
-          Show Candidates Skills Bubble Chart
+           Candidates Languages Bubble Chart
         </Button>{" "}
         </Col>
-       
+        <Col><Button
+          variant="primary"
+          onClick={()=>setScatterModal(true)}
+          
+        >
+           Scatter Plot
+        </Button>{" "}
+        </Col>
       </Row>
       
       <MyVerticallyCenteredModal
@@ -1767,6 +1798,7 @@ function CandidatesList() {
       <TeamsDonutModal show={teamsDonutModal} onHide={() => setTeamsDonutModal(false)} />
       <SkillsBubbleModal show={skillsBubbleModal} onHide={() => setSkillsBubbleModal(false)} />
       <LanguageBubbleModal show={languageBubbleModal} onHide={() => setLanguageBubbleModal(false)} />
+      <ScatterModal show={scatterModal} onHide={() => setScatterModal(false)} />
     </>
   );
 }

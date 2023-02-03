@@ -2,30 +2,34 @@ import { useD3 } from "../Hooks/useD3";
 import * as d3 from "d3";
 import { useEffect } from "react";
 function Dounut(props) {
-  let data = [{candidateName: 'Candidate 1', skillsMatch: 15},
-  {candidateName: 'Candidate 2', skillsMatch: 5},
-  {candidateName: 'Candidate 3', skillsMatch: 10},
-  {candidateName: 'Candidate 4', skillsMatch: 10},
-  {candidateName: 'Candidate 5', skillsMatch: 30},
-  {candidateName: 'Candidate 6', skillsMatch: 15},
-  {candidateName: 'Candidate 7', skillsMatch: 10},
-  {candidateName: 'Candidate 8', skillsMatch: 20},
-  {candidateName: 'Candidate 9', skillsMatch: 75},
-  {candidateName: 'Candidate 10', skillsMatch: 10}];
+  // let data = [{candidateName: 'Candidate 1', skillsMatch: 15},
+  // {candidateName: 'Candidate 2', skillsMatch: 5},
+  // {candidateName: 'Candidate 3', skillsMatch: 10},
+  // {candidateName: 'Candidate 4', skillsMatch: 10},
+  // {candidateName: 'Candidate 5', skillsMatch: 30},
+  // {candidateName: 'Candidate 6', skillsMatch: 15},
+  // {candidateName: 'Candidate 7', skillsMatch: 10},
+  // {candidateName: 'Candidate 8', skillsMatch: 20},
+  // {candidateName: 'Candidate 9', skillsMatch: 75},
+  // {candidateName: 'Candidate 10', skillsMatch: 10}];
+  let data = [];
+  data = [...props.candidatesResult];
   let count = 0;
-  
-  // console.log(data);
+
+  console.log(data);
+
 
   useEffect(() => {
     count += 1;
-    if (count<2) {
+    if (count < 2) {
       drawBubbleChart();
-  }}, []);
+    }
+  }, []);
 
   const drawBubbleChart = () => {
     var margin = { top: 30, right: 0, bottom: 30, left: 0 },
       width = 960 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom,
+      height = 700 - margin.top - margin.bottom,
       tooltip = { width: 100, height: 100, x: 10, y: -30 };
     //initialize margin end
     var svg = d3
@@ -39,7 +43,7 @@ function Dounut(props) {
     var pie = d3
       .pie()
       .sort(null)
-      .value((d) => d.skillsMatch);
+      .value((d) => d.overall);
 
     var arc = d3
       .arc()
@@ -51,13 +55,13 @@ function Dounut(props) {
       const radius = (Math.min(width, height) / 2) * 0.8;
       return d3.arc().innerRadius(radius).outerRadius(radius);
     };
-    data.forEach(function (d) {
-      // console.log(d);
-      //     d.date = parseDate(d.date);
-    });
+    // data.forEach(function (d) {
+    //   // console.log(d);
+    //   //     d.date = parseDate(d.date);
+    // });
     var color = d3
       .scaleOrdinal(d3.schemeSet1)
-      .domain(data.map((d) => d.candidateName))
+      .domain(data.map((d) => d.name))
       .range(
         d3
           .quantize((t) => d3.interpolateSpectral(t * 0.8 + 0.1), data.length)
@@ -71,11 +75,11 @@ function Dounut(props) {
       .data(arcs)
       .enter()
       .append("path")
-      .attr("fill", (d) => color(d.data.candidateName))
+      .attr("fill", (d) => color(d.data.name))
       .attr("d", arc)
       .append("title")
       .text(
-        (d) => `${d.data.candidateName}: ${d.data.skillsMatch.toLocaleString()}`
+        (d) => `${d.data.name}: ${d.data.overall.toLocaleString()}`
       );
 
     svg
@@ -93,7 +97,7 @@ function Dounut(props) {
           .append("tspan")
           .attr("y", "-0.4em")
           .attr("font-weight", "bold")
-          .text((d) => d.data.candidateName)
+          .text((d) => d.data.name)
       )
       .call((text) =>
         text
@@ -102,7 +106,9 @@ function Dounut(props) {
           .attr("x", 0)
           .attr("y", "0.7em")
           .attr("fill-opacity", 0.7)
-          .text((d) => d.data.skillsMatch.toLocaleString())
+          .attr("font-weight", "bold")
+          .attr("font-size", "16")
+          .text((d) => d.data.overall+"%")
       );
   };
   return (

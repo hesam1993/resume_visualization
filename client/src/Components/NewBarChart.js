@@ -6,7 +6,7 @@ function NewBarChart(props) {
   let data = {};
   let count = 0;
   data = [...props.skillsList];
-  // console.log(Math.max(data))
+  console.log(data)
   let max = 0;
   data.forEach((dd) => {
     max < dd.Count ? (max = dd.Count) : (max = max);
