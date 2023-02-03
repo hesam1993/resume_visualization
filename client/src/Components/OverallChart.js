@@ -1,28 +1,25 @@
 import { useD3 } from "../Hooks/useD3";
 import * as d3 from "d3";
 import { useEffect } from "react";
-function NewBarChart(props) {
+function OverallChart(props) {
   console.log("NEW BAR CHART IS CALLED!!!!!")
   let data = {};
   let count = 0;
-  data = [...props.skillsList];
+  data = [...props.candidates];
   console.log(data)
   let max = 0;
-  data.forEach((dd) => {
-    max < dd.Count ? (max = dd.Count) : (max = max);
-  });
 
   useEffect(() => {
     count += 1;
     if (count < 2) {
-      drawBubbleChart();
+      drawBarChart();
     }
   }, []);
 
-  const drawBubbleChart = () => {
+  const drawBarChart = () => {
     var margin = { top: 30, right: 30, bottom: 110, left: 60 },
-      width = 1600 - margin.left - margin.right,
-      height = 600 - margin.top - margin.bottom;
+      width = 1500 - margin.left - margin.right,
+      height = 700 - margin.top - margin.bottom;
 
     // append the svg object to the body of the page
     var svg = d3
@@ -41,7 +38,7 @@ function NewBarChart(props) {
       .range([0, width])
       .domain(
         data.map(function (d) {
-          return d.Name;
+          return d.candidateName;
         })
       )
       .padding(0.2);
@@ -56,7 +53,7 @@ function NewBarChart(props) {
     // Add Y axis
     var y = d3
       .scaleLinear()
-      .domain([0, max * 1.2])
+      .domain([0, 100])
       .range([height, 0]);
     svg.append("g").call(d3.axisLeft(y));
 
@@ -67,14 +64,14 @@ function NewBarChart(props) {
       .enter()
       .append("rect")
       .attr("x", function (d) {
-        return x(d.Name);
+        return x(d.candidateName);
       })
       .attr("y", function (d) {
-        return y(d.Count);
+        return y(d.overallScore);
       })
       .attr("width", x.bandwidth())
       .attr("height", function (d) {
-        return height - y(d.Count);
+        return height - y(d.overallScore);
       })
       .attr("fill", "#69b3a2");
   };
@@ -85,4 +82,4 @@ function NewBarChart(props) {
   );
 }
 
-export default NewBarChart;
+export default OverallChart;

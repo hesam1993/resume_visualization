@@ -12,6 +12,7 @@ import { Button, Stack, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import ScatterPlot from "./ScatterPlot";
 import ScatterPlotExpSkill from "./ScatterPlot_ExpSkill";
+import OverallChart from "./OverallChart";
 function CandidatesList() {
   let navigate = useNavigate();
   const TtopUnis = [
@@ -536,6 +537,7 @@ function CandidatesList() {
   const [skillsBubbleModal, setSkillsBubbleModal] = useState(false);
   const [languageBubbleModal, setLanguageBubbleModal] = useState(false);
   const [scatterExpSkillModal, setScatterExpSkillModal] = useState(false);
+  const [overallScoreModal, setOverallScoreModal] = useState(false);
   const [teamsDonutModal, setTeamsDonutModal] = useState(false);
   const [scatterModal, setScatterModal] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState({});
@@ -1410,6 +1412,29 @@ function CandidatesList() {
       </Modal>
     );
   };
+  const OverallScoreModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        fullscreen={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidates Skills Chart
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {<OverallChart candidates={candidates}></OverallChart>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
   const TeamsDonutModal = (props) => {
     return (
       <Modal
@@ -1773,6 +1798,14 @@ function CandidatesList() {
       <Row className="m-5">
       <Col><Button
           variant="primary"
+          onClick={()=>setOverallScoreModal(true)}
+          
+        >
+          Overall Ranking
+        </Button>{" "}
+        </Col>
+      <Col><Button
+          variant="primary"
           onClick={()=>setSkillsModal(true)}
           
         > Candidates Skills Chart
@@ -1819,6 +1852,7 @@ function CandidatesList() {
            Experience/Skills Score
         </Button>{" "}
         </Col>
+
       </Row>
       
       <MyVerticallyCenteredModal
@@ -1832,6 +1866,7 @@ function CandidatesList() {
       <LanguageBubbleModal show={languageBubbleModal} onHide={() => setLanguageBubbleModal(false)} />
       <ScatterModal show={scatterModal} onHide={() => setScatterModal(false)} />
       <ScatterExpSkillModal show={scatterExpSkillModal} onHide={() => setScatterExpSkillModal(false)} />
+      <OverallScoreModal show={overallScoreModal} onHide={() => setOverallScoreModal(false)} />
     </>
   );
 }
