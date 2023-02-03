@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Stack, Row, Col } from "react-bootstrap";
 import { useEffect, useState } from "react";
 import ScatterPlot from "./ScatterPlot";
+import ScatterPlotExpSkill from "./ScatterPlot_ExpSkill";
 function CandidatesList() {
   let navigate = useNavigate();
   const TtopUnis = [
@@ -534,6 +535,7 @@ function CandidatesList() {
   const [skillsModal, setSkillsModal] = useState(false);
   const [skillsBubbleModal, setSkillsBubbleModal] = useState(false);
   const [languageBubbleModal, setLanguageBubbleModal] = useState(false);
+  const [scatterExpSkillModal, setScatterExpSkillModal] = useState(false);
   const [teamsDonutModal, setTeamsDonutModal] = useState(false);
   const [scatterModal, setScatterModal] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState({});
@@ -1506,7 +1508,29 @@ function CandidatesList() {
       </Modal>
     );
   };
-
+  const ScatterExpSkillModal = (props) => {
+    return (
+      <Modal
+        {...props}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        fullscreen={true}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Candidates Experience years / Skills Match Score Scatter Plot
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            {<ScatterPlotExpSkill candidates={candidates}></ScatterPlotExpSkill>}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button onClick={props.onHide}>Close</Button>
+        </Modal.Footer>
+      </Modal>
+    );
+  };
 
   return (
     <>
@@ -1784,7 +1808,15 @@ function CandidatesList() {
           onClick={()=>setScatterModal(true)}
           
         >
-           Scatter Plot
+           Experience/Overall Score
+        </Button>{" "}
+        </Col>
+        <Col><Button
+          variant="primary"
+          onClick={()=>setScatterExpSkillModal(true)}
+          
+        >
+           Experience/Skills Score
         </Button>{" "}
         </Col>
       </Row>
@@ -1799,6 +1831,7 @@ function CandidatesList() {
       <SkillsBubbleModal show={skillsBubbleModal} onHide={() => setSkillsBubbleModal(false)} />
       <LanguageBubbleModal show={languageBubbleModal} onHide={() => setLanguageBubbleModal(false)} />
       <ScatterModal show={scatterModal} onHide={() => setScatterModal(false)} />
+      <ScatterExpSkillModal show={scatterExpSkillModal} onHide={() => setScatterExpSkillModal(false)} />
     </>
   );
 }
