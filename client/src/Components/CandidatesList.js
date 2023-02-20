@@ -898,12 +898,6 @@ function CandidatesList() {
     overallMatch += (expMatch / 4) * teamWeight.exp;
     overallMatch += (skillsMatch / 4) * teamWeight.skills;
     overallMatch += (langMatch / 4) * teamWeight.lang;
-    // console.log(
-    //   parseInt(weight.uni) +
-    //     parseInt(weight.exp) +
-    //     parseInt(weight.skills) +
-    //     parseInt(weight.lang)
-    // );
     overallMatch =
       overallMatch /
       ((parseInt(teamWeight.uni) +
@@ -1659,7 +1653,7 @@ function CandidatesList() {
                   sortCandidates("overallScore");
                 }}
               >
-                Candidate Match
+                Overall Match
               </p>
             </th>
             {/* <th>Remove</th> */}
@@ -1762,7 +1756,7 @@ function CandidatesList() {
                 onChange={teamWeightInputsSkills}
               ></input>
             </th>
-            <th>Skills Miss</th>
+            <th>Skills Miss Match</th>
             <th>
               Languages Match{" "}
               <input
@@ -1772,7 +1766,8 @@ function CandidatesList() {
                 onChange={teamWeightInputsLang}
               ></input>
             </th>
-            <th>Overall Comparison </th>
+            <th>Overall Match </th>
+            <th>Overall Miss Match </th>
           </tr>
         </thead>
         <tbody>
@@ -1790,6 +1785,7 @@ function CandidatesList() {
                 <td>{100 - candidate.skills}%</td>
                 <td>{candidate.lang}%</td>
                 <td>{candidate.overall}%</td>
+                <td>{100 - candidate.overall}%</td>
               </tr>
             );
           })}

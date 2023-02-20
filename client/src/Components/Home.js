@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import PositionsList from "./PositionsList";
 
 function Home() {
-  const [applications, setApplications] = useState([]);
+
   const [positions, setPositions] = useState([]);
   useEffect(() => {
     API.getPositions()
