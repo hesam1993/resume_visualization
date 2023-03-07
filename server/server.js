@@ -5,6 +5,8 @@ const morgan = require("morgan"); // logging middleware
 const cookieParser = require("cookie-parser");
 const dao = require("./dao/dao");
 const path = require("path");
+// for parsing the body in POST request
+var bodyParser = require('body-parser');
 require("dotenv").config();
 
 const port = 3001;
@@ -167,10 +169,31 @@ app.get("/api/applications", async (req, res) => {
     }
   });
 
+  app.get("/api/teams", async (req, res) => {
+    try {
+      const teams = await dao.getTeams();
+      res.status(200).json({ teams });
+    } catch (err) {
+      console.log(err);
+      res.status(400).end();
+    }
+  });
+
   app.put("/api/positions/:posId", async (req, res) => {
     const posId = req.params.posId
     try {
       const result = await dao.closePosition(posId);
+      res.status(200).json({ result });
+    } catch (err) {
+      console.log(err);
+      res.status(400).end();
+    }
+  });
+
+  app.post("/api/positions/", async (req, res) => {
+    const posInfo = req.body
+    try {
+      const result = await dao.addPosition(posInfo);
       res.status(200).json({ result });
     } catch (err) {
       console.log(err);

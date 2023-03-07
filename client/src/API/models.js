@@ -352,6 +352,21 @@ class TeamMemberData {
     return l;
   }
 }
+class TeamData {
+  constructor(id, name) {
+    this.id = id;
+    this.name = name;
+  }
+  /**
+   * Construct a Counter from a plain object
+   * @param {{}} json
+   * @return  Track the newly created Track object
+   */
+  static from(json) {
+    const l = Object.assign(new TeamData(), json);
+    return l;
+  }
+}
 
 const models = {
   SkillsData,
@@ -366,5 +381,6 @@ const models = {
   GithubData,
   MediumData,
   TeamMemberData,
+  TeamData
 };
 export default models;

@@ -6,13 +6,27 @@ import { useEffect, useState } from "react";
 import PositionsList from "./PositionsList";
 
 function Home() {
-
   const [positions, setPositions] = useState([]);
+  const [teams, setTeams] = useState([]);
+  const [fields, setFields] = useState([]);
+
   useEffect(() => {
     API.getPositions()
       .then((positionsInfo) => {
         setPositions(positionsInfo);
-        console.log(positions);
+        console.log(positionsInfo);
+      })
+      .catch((err) => console.log(err));
+    API.getFields()
+      .then((fieldsInfo) => {
+        setFields(fieldsInfo);
+        console.log(fieldsInfo);
+      })
+      .catch((err) => console.log(err));
+    API.getTeams()
+      .then((teamsInfo) => {
+        setTeams(teamsInfo);
+        console.log(teamsInfo)
       })
       .catch((err) => console.log(err));
   }, []);
@@ -46,10 +60,12 @@ function Home() {
     <>
       <Container fluid>
         <Row>
-          <PositionsList
+          {positions.length >0 && fields.length >0 && teams.length >0 && <PositionsList
             positions={positions}
             closingPosition={closingPosition}
-          ></PositionsList>
+            fields = {fields}
+            teams={teams}
+          ></PositionsList>}
         </Row>
       </Container>
     </>

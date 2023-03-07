@@ -98,7 +98,7 @@ exports.getCandidate = (candidateId) => {
 };
 
 exports.closePosition = (positionId) => {
-  console.log(positionId)
+  console.log(positionId);
   return new Promise((resolve, reject) => {
     const sql = `update positions set status = 0 where id = ?`;
     db.all(sql, [positionId], (err, rows) => {
@@ -120,8 +120,8 @@ exports.getPositions = () => {
     positions.languages,
     fields.field,
     positions.skills,COUNT(DISTINCT applications.candidateId)
-    as 'sumCandidates',positions.status from applications
-    JOIN positions on applications.positionId = positions.id JOIN fields on positions.id = fields.id GROUP BY applications.positionId`;
+    as 'sumCandidates',positions.status from positions
+    LEFT JOIN applications on  positions.id = applications.positionId LEFT JOIN fields on positions.fieldId = fields.id GROUP BY positions.id`;
     db.all(sql, (err, rows) => {
       if (err) {
         reject(err);
@@ -400,6 +400,51 @@ exports.getTeamMembers = (teamId) => {
   });
 };
 
+exports.getTeams = () => {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT * FROM team`;
+    db.all(sql, (err, rows) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      const teams = rows.map((row) => new TeamData(row.id, row.name));
+
+      resolve(teams);
+    });
+  });
+};
+
+exports.addPosition = (newPosition) => {
+
+
+  console.log(newPosition);
+  return new Promise((resolve, reject) => {
+    const sql = `INSERT INTO positions (title, description, minExp, skills, teamId, fieldId, languages, status)
+    VALUES (?,?,?,?,?,?,?, 1);`;
+    db.all(
+      sql,
+      [
+        newPosition.title,
+        newPosition.desc,
+        newPosition.minExp,
+        newPosition.skills,
+        newPosition.teamId,
+        newPosition.fieldId,
+        newPosition.languages,
+      ],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        // const teams = rows.map((row) => new TeamData(row.id, row.name));
+
+        resolve(true);
+      }
+    );
+  });
+};
 // ===========================================================================================
 
 class CandidateData {
@@ -627,5 +672,11 @@ class TeamMemberData {
     this.location = location;
     this.languages = languages;
     this.university = university;
+  }
+}
+class TeamData {
+  constructor(id, name) {
+    this.id = id;
+    this.name = name;
   }
 }
