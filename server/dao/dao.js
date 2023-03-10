@@ -416,8 +416,6 @@ exports.getTeams = () => {
 };
 
 exports.addPosition = (newPosition) => {
-
-
   console.log(newPosition);
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO positions (title, description, minExp, skills, teamId, fieldId, languages, status)
@@ -432,6 +430,56 @@ exports.addPosition = (newPosition) => {
         newPosition.teamId,
         newPosition.fieldId,
         newPosition.languages,
+      ],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        // const teams = rows.map((row) => new TeamData(row.id, row.name));
+
+        resolve(true);
+      }
+    );
+  });
+};
+
+exports.addTeam = (teamInfo) => {
+  console.log(teamInfo);
+  return new Promise((resolve, reject) => {
+    const sql = `INSERT INTO team (name)
+    VALUES (?);`;
+    db.all(
+      sql,
+      [
+        teamInfo.name,
+      ],
+      (err, rows) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        // const teams = rows.map((row) => new TeamData(row.id, row.name));
+
+        resolve(true);
+      }
+    );
+  });
+};
+exports.addTeamMember = (newMember) => {
+  console.log(newMember);
+  return new Promise((resolve, reject) => {
+    const sql = `INSERT INTO team_members (fullName, skills, experienceYears, teamId, university, languages)
+    VALUES (?,?,?,?,?,?);`;
+    db.all(
+      sql,
+      [
+        newMember.fullName,
+        newMember.skills,
+        newMember.experienceYears,
+        newMember.teamId,
+        newMember.university,
+        newMember.languages,
       ],
       (err, rows) => {
         if (err) {

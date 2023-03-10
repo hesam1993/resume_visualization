@@ -201,6 +201,27 @@ app.get("/api/applications", async (req, res) => {
     }
   });
 
+  app.post("/api/teams/", async (req, res) => {
+    const teamInfo = req.body
+    try {
+      const result = await dao.addTeam(teamInfo);
+      res.status(200).json({ result });
+    } catch (err) {
+      console.log(err);
+      res.status(400).end();
+    }
+  });
+  app.post("/api/members/", async (req, res) => {
+    const memberInfo = req.body
+    try {
+      const result = await dao.addTeamMember(memberInfo);
+      res.status(200).json({ result });
+    } catch (err) {
+      console.log(err);
+      res.status(400).end();
+    }
+  });
+
 app.listen(port, () => {
   console.log(`app listening at http://localhost:${port}`);
 });

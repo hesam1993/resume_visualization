@@ -306,15 +306,6 @@ async function getFields() {
 }
 
 async function addPosition(positionInfo) {
-  // var formdata = new FormData();
-  // formdata.append("title", positionInfo.title);
-  // formdata.append("desc", positionInfo.desc);
-  // formdata.append("minExp", positionInfo.minExp);
-  // formdata.append("skills", positionInfo.skills);
-  // formdata.append("teamId", positionInfo.teamId);
-  // formdata.append("fieldId", positionInfo.fieldId);
-  // formdata.append("languages", positionInfo.languages);
-
   var requestOptions = {
     method: "POST",
     headers: {
@@ -330,11 +321,6 @@ async function addPosition(positionInfo) {
       languages: positionInfo.languages,
     }),
   };
-  // var requestOptions = {
-  //   method: 'POST',
-  //   body: formdata,
-  //   redirect: 'follow'
-  // };
   let url = `${baseURL}/positions/`;
   const response = await fetch(url, requestOptions);
   const resultJson = await response.json();
@@ -345,6 +331,54 @@ async function addPosition(positionInfo) {
     throw err; // An object with the error coming from the server
   }
 }
+
+async function addTeam(teamName) {
+  var requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: teamName,
+    }),
+  };
+  let url = `${baseURL}/teams/newMember`;
+  const response = await fetch(url, requestOptions);
+  const resultJson = await response.json();
+  if (response.ok) {
+    return resultJson;
+  } else {
+    let err = { status: response.status, errObj: resultJson };
+    throw err; // An object with the error coming from the server
+  }
+}
+
+async function addTeamMember(memberInfo) {
+  var requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fullName: memberInfo.fullName,
+      skills: memberInfo.skills,
+      teamId: parseInt(memberInfo.teamId),
+      university: memberInfo.university,
+      experienceYears: parseInt(memberInfo.experienceYears),
+      languages: memberInfo.languages,
+    }),
+  };
+  let url = `${baseURL}/members`;
+  const response = await fetch(url, requestOptions);
+  const resultJson = await response.json();
+  if (response.ok) {
+    return resultJson;
+  } else {
+    let err = { status: response.status, errObj: resultJson };
+    throw err; // An object with the error coming from the server
+  }
+}
+
 
 const API = {
   getPositions,
@@ -361,5 +395,7 @@ const API = {
   getTeams,
   getFields,
   addPosition,
+  addTeam,
+  addTeamMember
 };
 export default API;
